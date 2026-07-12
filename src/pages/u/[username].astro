@@ -1,0 +1,262 @@
+---
+import Base from '../../layouts/Base.astro';
+import DifficultyBreakdown from '../../components/DifficultyBreakdown.astro';
+import CoverageCard from '../../components/CoverageCard.astro';
+import HeatmapCalendar from '../../components/HeatmapCalendar.astro';
+import Tier2Input from '../../components/Tier2Input.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import TopicRadarChart from '../../components/TopicRadarChart';
+import blind75Data from '../../data/lists/blind75.json';
+import neetcode150Data from '../../data/lists/neetcode150.json';
+import grind75Data from '../../data/lists/grind75.json';
+
+export const prerender = false;
+
+const { username } = Astro.params;
+
+// Fetch profile data server-side
+let profileData: any = null;
+let errorState: string | null = null;
+
+try {
+  const apiUrl = new URL(`/api/profile?username=${encodeURIComponent(username ?? '')}`, Astro.url);
+  const res = await fetch(apiUrl.toString());
+
+  if (res.status === 404) {
+    errorState = 'user_not_found';
+  } else if (res.status === 400) {
+    errorState = 'invalid_username';
+  } else if (res.status === 503) {
+    errorState = 'leetcode_unavailable';
+  } else if (!res.ok) {
+    errorState = 'unknown_error';
+  } else {
+    profileData = await res.json();
+  }
+} catch {
+  errorState = 'network_error';
+}
+
+// Extract stats
+const matchedUser = profileData?.matchedUser;
+const acStats = matchedUser?.submitStatsGlobal?.acSubmissionNum ?? [];
+const easyStat = acStats.find((s: any) => s.difficulty === 'Easy') ?? { count: 0 };
+const mediumStat = acStats.find((s: any) => s.difficulty === 'Medium') ?? { count: 0 };
+const hardStat = acStats.find((s: any) => s.difficulty === 'Hard') ?? { count: 0 };
+
+// LeetCode totals (approximate — updated periodically)
+const LC_EASY_TOTAL = 867;
+const LC_MEDIUM_TOTAL = 1834;
+const LC_HARD_TOTAL = 813;
+
+const recentAC: Array<{ titleSlug: string }> = profileData?.recentAcSubmissionList ?? [];
+const solvedSlugs = new Set(recentAC.map((s) => s.titleSlug));
+
+// Helper: compute coverage for a list
+function computeCoverage(listData: any[]) {
+  const allProblems = listData.map((p: any) => ({
+    slug: p.slug,
+    title: p.title,
+    difficulty: p.difficulty,
+    tags: p.tags ?? [],
+  }));
+  const solved = allProblems.filter((p) => solvedSlugs.has(p.slug));
+  const remaining = allProblems.filter((p) => !solvedSlugs.has(p.slug));
+  return {
+    totalProblems: allProblems.length,
+    solvedCount: solved.length,
+    solvedSlugs: solved.map((p) => p.slug),
+    remainingProblems: remaining,
+  };
+}
+
+const blind75Coverage = computeCoverage(blind75Data as any[]);
+const neetcode150Coverage = computeCoverage(neetcode150Data as any[]);
+const grind75Coverage = computeCoverage(grind75Data as any[]);
+
+// Submission calendar
+const calendarRaw = profileData?.userCalendar?.submissionCalendar;
+let submissionCalendar: Record<string, number> = {};
+if (calendarRaw) {
+  try {
+    submissionCalendar = typeof calendarRaw === 'string' ? JSON.parse(calendarRaw) : calendarRaw;
+  } catch {
+    submissionCalendar = {};
+  }
+}
+
+const tagProblemCounts = profileData?.matchedUser?.tagProblemCounts ?? {};
+const allTags = [
+  ...(tagProblemCounts.advanced ?? []),
+  ...(tagProblemCounts.intermediate ?? []),
+  ...(tagProblemCounts.fundamental ?? []),
+].filter((t: any) => t.problemsSolved > 0);
+
+const pageTitle = errorState
+  ? `LeetCode Profile — LeetCodeAnalyzer`
+  : `${username}'s LeetCode Progress — Blind 75, NeetCode 150 & More | LeetCodeAnalyzer`;
+---
+
+<Base
+  title={pageTitle}
+  noindex={true}
+  canonical={`https://leetcodeanalyzer.com/u/${username}`}
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    {/* Error states */}
+    {errorState === 'user_not_found' && (
+      <div class="max-w-lg mx-auto text-center py-20 font-sans">
+        <div class="text-5xl mb-6 font-mono text-signal" aria-hidden="true">🔍</div>
+        <h1 class="text-2xl font-semibold mb-3 font-display" style="color: var(--color-text-primary);">
+          Profile Not Found
+        </h1>
+        <p class="text-base mb-2" style="color: var(--color-text-secondary);">
+          No LeetCode profile found for <strong class="text-signal font-mono">@{username}</strong>.
+        </p>
+        <p class="text-sm mb-8" style="color: var(--color-text-muted);">
+          Double-check the username spelling. Usernames are case-sensitive.
+        </p>
+        <a href="/" class="btn-brand">← Try another username</a>
+      </div>
+    )}
+
+    {errorState === 'leetcode_unavailable' && (
+      <div class="max-w-lg mx-auto text-center py-20 font-sans">
+        <div class="text-5xl mb-6 font-mono text-signal" aria-hidden="true">⏳</div>
+        <h1 class="text-2xl font-semibold mb-3 font-display" style="color: var(--color-text-primary);">
+          LeetCode Temporarily Unavailable
+        </h1>
+        <p class="text-base mb-8" style="color: var(--color-text-secondary);">
+          LeetCode's API is not responding right now. Please try again in a moment.
+        </p>
+        <div class="flex gap-3 justify-center">
+          <button onclick="window.location.reload()" class="btn-brand">Retry</button>
+          <a href="/" class="btn-ghost">← Home</a>
+        </div>
+      </div>
+    )}
+
+    {(errorState === 'invalid_username' || errorState === 'unknown_error' || errorState === 'network_error') && (
+      <div class="max-w-lg mx-auto text-center py-20 font-sans">
+        <div class="text-5xl mb-6 font-mono text-signal" aria-hidden="true">⚠️</div>
+        <h1 class="text-2xl font-semibold mb-3 font-display" style="color: var(--color-text-primary);">
+          Something Went Wrong
+        </h1>
+        <p class="text-base mb-8" style="color: var(--color-text-secondary);">
+          {errorState === 'invalid_username'
+            ? 'That username format is not valid. Usernames must be 1–25 alphanumeric characters.'
+            : 'An unexpected error occurred. Please try again.'}
+        </p>
+        <a href="/" class="btn-brand">← Try again</a>
+      </div>
+    )}
+
+    {!errorState && profileData && (
+      <div class="space-y-8 animate-fade-in">
+        {/* Page header */}
+        <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 font-sans">
+          <div>
+            <p class="section-label mb-1">LeetCode Progress</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold font-display animate-slide-up" style="color: var(--color-text-primary);">
+              <a
+                href={`https://leetcode.com/${username}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-signal transition-colors font-mono"
+              >
+                @{username}
+              </a>
+            </h1>
+            {matchedUser?.profile?.realName && (
+              <p class="text-sm mt-1" style="color: var(--color-text-muted);">{matchedUser.profile.realName}</p>
+            )}
+          </div>
+          <a
+            href={`https://leetcode.com/${username}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-ghost text-xs shrink-0"
+          >
+            View on LeetCode ↗
+          </a>
+        </header>
+
+        {/* Difficulty breakdown */}
+        <DifficultyBreakdown
+          easy={{ solved: easyStat.count, total: LC_EASY_TOTAL }}
+          medium={{ solved: mediumStat.count, total: LC_MEDIUM_TOTAL }}
+          hard={{ solved: hardStat.count, total: LC_HARD_TOTAL }}
+        />
+
+        {/* Topic radar chart */}
+        {allTags.length > 0 && (
+          <section aria-labelledby="radar-heading" class="card p-6">
+            <h2 id="radar-heading" class="text-base font-semibold mb-4 font-display" style="color: var(--color-text-primary);">Topic Distribution</h2>
+            <TopicRadarChart tags={allTags} client:visible />
+          </section>
+        )}
+
+        {/* Coverage cards */}
+        <section aria-labelledby="coverage-heading" class="font-sans">
+          <h2 id="coverage-heading" class="text-lg font-semibold mb-4 font-display" style="color: var(--color-text-primary);">
+            List Coverage
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CoverageCard
+              listName="blind75"
+              totalProblems={blind75Coverage.totalProblems}
+              solvedCount={blind75Coverage.solvedCount}
+              solvedSlugs={blind75Coverage.solvedSlugs}
+              remainingProblems={blind75Coverage.remainingProblems}
+              author="Yangshun Tay"
+              authorUrl="https://github.com/yangshun"
+            />
+            <CoverageCard
+              listName="neetcode150"
+              totalProblems={neetcode150Coverage.totalProblems}
+              solvedCount={neetcode150Coverage.solvedCount}
+              solvedSlugs={neetcode150Coverage.solvedSlugs}
+              remainingProblems={neetcode150Coverage.remainingProblems}
+              author="NeetCode"
+              authorUrl="https://neetcode.io"
+            />
+            <CoverageCard
+              listName="grind75"
+              totalProblems={grind75Coverage.totalProblems}
+              solvedCount={grind75Coverage.solvedCount}
+              solvedSlugs={grind75Coverage.solvedSlugs}
+              remainingProblems={grind75Coverage.remainingProblems}
+              author="Yangshun Tay"
+              authorUrl="https://grind75.com"
+            />
+          </div>
+        </section>
+
+        {/* Heatmap */}
+        <section aria-labelledby="heatmap-heading">
+          <h2 id="heatmap-heading" class="sr-only">Submission activity</h2>
+          <HeatmapCalendar submissionCalendar={submissionCalendar} />
+        </section>
+
+        <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: below results section, not adjacent to Tier 2 security notice -->
+        <AdSlot slotId="profile-below-results" className="my-8" />
+
+        {/* Tier 2 */}
+        <section aria-labelledby="tier2-heading">
+          <h2 id="tier2-heading" class="sr-only">Advanced analysis</h2>
+          <Tier2Input />
+        </section>
+
+        {/* Solution analyzer CTA */}
+        <div class="card p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-surface-800/40 border border-surface-600 font-sans">
+          <div>
+            <p class="text-sm font-semibold" style="color: var(--color-text-primary);">Analyze one of your solutions</p>
+            <p class="text-xs mt-1" style="color: var(--color-text-muted);">Get time/space complexity, better approaches — all in your browser</p>
+          </div>
+          <a href="/analyze" class="btn-brand shrink-0">Solution Analyzer →</a>
+        </div>
+      </div>
+    )}
+  </div>
+</Base>

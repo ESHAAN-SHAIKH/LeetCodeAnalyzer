@@ -1,0 +1,171 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'How Many LeetCode Problems Should You Solve? | LeetCodeAnalyzer';
+const description = 'The number question has a better answer: pattern coverage beats raw volume. Here\'s how to think about 75 vs 150 vs 300+ problems for your goal.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How Many LeetCode Problems Should You Solve?',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is 150 LeetCode problems enough for Google?',
+      acceptedAnswer: { '@type': 'Answer', text: 'For most Google screens, completing NeetCode 150 with solid understanding is sufficient. Google interviews favor problem-solving clarity over obscure hard problems. Depth of pattern understanding matters more than total count.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Should I do hard LeetCode problems?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes — but only after you\'ve built a solid medium foundation. Trying hard problems too early leads to looking at solutions immediately, which doesn\'t build real problem-solving skill. Aim for 70%+ medium solve rate before starting hard problems.' },
+    },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-brand-400 transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">How Many Problems?</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8" aria-label="Article: How Many Problems?">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--color-text-primary);">
+        How Many LeetCode Problems Should You Solve?
+      </h1>
+      <p class="text-sm mb-10" style="color: var(--color-text-muted);">4 min read · LeetCodeAnalyzer</p>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">The Number Question Has a Better Answer</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          "How many problems should I do?" is the wrong question. The right question is:
+          <strong style="color: var(--color-text-primary);">"Have I seen and understood all the core patterns?"</strong>
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          Two engineers can both have solved 300 problems. One understands 15 patterns deeply. The other has memorized
+          300 solutions without generalizing. In interviews, the first engineer wins every time.
+          <strong style="color: var(--color-text-primary);">Quality over quantity.</strong>
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Common Targets: 75, 150, 300+</h2>
+        <div class="space-y-4">
+          {[
+            {
+              count: '75 problems (Blind 75)',
+              signal: 'Covers all core patterns for FAANG initial screens',
+              suitable: 'Time-constrained (2–4 weeks), strong foundational CS',
+              color: 'rgba(16,185,129,0.08)',
+              border: 'rgba(16,185,129,0.2)',
+              textColor: '#34d399',
+            },
+            {
+              count: '150 problems (NeetCode 150)',
+              signal: 'Stronger depth in each pattern area',
+              suitable: 'Most engineers targeting L4–L5 at FAANG',
+              color: 'rgba(99,102,241,0.08)',
+              border: 'rgba(99,102,241,0.2)',
+              textColor: '#818cf8',
+            },
+            {
+              count: '300+ problems',
+              signal: 'Encounters most pattern variations and edge cases',
+              suitable: 'Targeting senior/staff roles at top companies',
+              color: 'rgba(245,158,11,0.08)',
+              border: 'rgba(245,158,11,0.2)',
+              textColor: '#fbbf24',
+            },
+          ].map(({ count, signal, suitable, color, border, textColor }) => (
+            <div class="rounded-xl p-5" style={`background: ${color}; border: 1px solid ${border};`}>
+              <p class="text-base font-bold mb-1" style={`color: ${textColor};`}>{count}</p>
+              <p class="text-sm mb-1" style="color: var(--color-text-primary);">{signal}</p>
+              <p class="text-xs" style="color: var(--color-text-muted);">Best for: {suitable}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">The Pattern Coverage Argument</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          There are roughly <strong style="color: var(--color-text-primary);">15–20 core algorithmic patterns</strong> that cover the vast majority of interview problems:
+          two pointers, sliding window, binary search, BFS, DFS, topological sort, dynamic programming, backtracking, heaps, tries, union-find, and a few more.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          Once you've genuinely mastered each pattern — meaning you can recognize it, apply it, and explain your complexity reasoning —
+          additional problems give <em>diminishing returns</em>. More problems reinforce, but don't replace, deep pattern understanding.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Time Constraints Guide Your Target</h2>
+        <div class="space-y-3">
+          {[
+            { time: 'Interview in 2 weeks', rec: 'Do Blind 75 — every day, prioritize patterns over completion.' },
+            { time: 'Interview in 4 weeks', rec: 'Do Grind 75 or start NeetCode 150 — complete all of one list.' },
+            { time: 'Interview in 2–3 months', rec: 'Complete NeetCode 150, add 50–100 company-specific problems.' },
+            { time: 'No deadline', rec: 'Do all three lists, then target hard problems in your weakest areas.' },
+          ].map(({ time, rec }) => (
+            <div class="flex gap-3 rounded-xl p-4" style="background: rgba(99,102,241,0.06);">
+              <span class="text-brand-400 font-bold text-sm shrink-0">⏱</span>
+              <div>
+                <p class="text-sm font-semibold" style="color: var(--color-text-primary);">{time}</p>
+                <p class="text-xs mt-0.5" style="color: var(--color-text-secondary);">{rec}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div class="rounded-2xl p-6 text-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2);">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">Check What You've Already Done</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          See exactly how many Blind 75, NeetCode 150, and Grind 75 problems you've already solved.
+        </p>
+        <a href="/" class="btn-brand">Check My Coverage →</a>
+      </div>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-3">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-problems-count" />
+    </aside>
+  </div>
+</div>
+</Base>

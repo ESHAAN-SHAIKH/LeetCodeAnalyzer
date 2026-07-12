@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://leetcodeanalyzer.com/' },
+    { '@type': 'ListItem', 'position': 2, 'name': 'Terms of Use', 'item': 'https://leetcodeanalyzer.com/terms' },
+  ],
+};
+---
+
+<Base title="Terms of Use | LeetCodeAnalyzer" description="Terms of use for LeetCodeAnalyzer — free to use, not affiliated with LeetCode, list attributions." jsonLd={[breadcrumbSchema]}>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">Terms of Use</li>
+      </ol>
+    </nav>
+
+    <h1 class="text-3xl font-extrabold mb-2" style="color: var(--color-text-primary);">Terms of Use</h1>
+    <p class="text-sm mb-10" style="color: var(--color-text-muted);">Last updated: January 1, 2025</p>
+
+    <div class="space-y-8 text-sm leading-relaxed" style="color: var(--color-text-secondary);">
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">1. Free to Use</h2>
+        <p>
+          LeetCodeAnalyzer is provided free of charge for personal use. There is no subscription, no account, and no payment required.
+          We reserve the right to modify, suspend, or discontinue the service at any time without notice.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">2. No Warranty</h2>
+        <p class="mb-3">
+          The service is provided "as is" and "as available" without warranty of any kind, express or implied.
+          We make no warranties regarding accuracy, completeness, or fitness for a particular purpose.
+        </p>
+        <p>
+          Complexity estimates provided by the Solution Analyzer are heuristic approximations. They are not authoritative and should be used as a learning aid, not a definitive verdict.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">3. Not Affiliated with LeetCode</h2>
+        <p>
+          LeetCodeAnalyzer is an independent tool and is <strong style="color: var(--color-text-primary);">not affiliated with, endorsed by, or sponsored by LeetCode or its parent company</strong>.
+          LeetCode® is a registered trademark of LeetCode. We access only LeetCode's public GraphQL API in a respectful, rate-limited manner.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">4. Acceptable Use</h2>
+        <ul class="space-y-2">
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span>You may use this service for personal interview preparation and educational purposes.</span></li>
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span>You may not use this service for commercial resale, data scraping at scale, or to build competing products using our API infrastructure.</span></li>
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span>You may not attempt to circumvent rate limits, abuse the API endpoints, or use the service in ways that violate LeetCode's own Terms of Service.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">5. Problem List Attributions</h2>
+        <p class="mb-3">The curated problem lists used in this tool are the intellectual work of their respective creators:</p>
+        <ul class="space-y-2">
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span><strong style="color: var(--color-text-primary);">Blind 75</strong> — compiled by <a href="https://github.com/yangshun" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">Yangshun Tay</a>. Originally posted to the Blind job forum. Used here for educational cross-referencing purposes.</span></li>
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span><strong style="color: var(--color-text-primary);">Grind 75</strong> — created by <a href="https://github.com/yangshun" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">Yangshun Tay</a> at <a href="https://grind75.com" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">grind75.com</a>.</span></li>
+          <li class="flex gap-2"><span class="text-brand-400 shrink-0">·</span><span><strong style="color: var(--color-text-primary);">NeetCode 150</strong> — curated by <a href="https://neetcode.io" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">NeetCode (Rohan Vasishth)</a>.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">6. Limitation of Liability</h2>
+        <p>
+          To the maximum extent permitted by applicable law, LeetCodeAnalyzer and its operators shall not be liable for any
+          indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of the service,
+          including but not limited to lost profits, data loss, or interview outcomes.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">7. Changes to These Terms</h2>
+        <p>
+          We may update these terms at any time. Continued use of the service after changes constitutes acceptance of the updated terms.
+          Material changes will be noted with an updated "Last updated" date.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3" style="color: var(--color-text-primary);">Contact</h2>
+        <p>
+          Questions? <a href="/contact" class="text-brand-400 hover:text-brand-300 underline">Contact us</a>.
+          See also our <a href="/privacy" class="text-brand-400 hover:text-brand-300 underline">Privacy Policy</a>.
+        </p>
+      </section>
+    </div>
+  </div>
+</Base>

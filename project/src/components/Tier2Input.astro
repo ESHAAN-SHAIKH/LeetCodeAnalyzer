@@ -1,0 +1,246 @@
+---
+// Tier2Input.astro — Session cookie input, collapsed by default with prominent security notice
+---
+
+<details class="card overflow-hidden" id="tier2-details">
+  <summary
+    class="flex items-center justify-between cursor-pointer select-none list-none px-6 py-4 transition-colors hover:bg-brand-500/5"
+    aria-expanded="false"
+  >
+    <div class="flex items-center gap-3">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg" style="background: rgba(99,102,241,0.12);">
+        <svg class="h-4 w-4 text-brand-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold" style="color: var(--color-text-primary);">Advanced: Analyze full submission history</p>
+        <p class="text-xs mt-0.5" style="color: var(--color-text-muted);">Requires session cookie — read security notice first</p>
+      </div>
+    </div>
+    <svg class="h-4 w-4 tier2-chevron transition-transform" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </summary>
+
+  <div class="px-6 pb-6 pt-2 space-y-5" id="tier2-body">
+    <!-- PROMINENT SECURITY NOTICE — shown every time, no dismiss -->
+    <div
+      class="rounded-xl p-4 border"
+      style="background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.3);"
+      role="note"
+      aria-label="Security notice"
+    >
+      <div class="flex items-start gap-3">
+        <span class="text-xl shrink-0 mt-0.5" aria-hidden="true">⚠️</span>
+        <div class="space-y-2">
+          <p class="text-sm font-semibold" style="color: #fbbf24;">Security Notice — Read Before Proceeding</p>
+          <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">
+            Your session cookie is <strong style="color: var(--color-text-primary);">equivalent to your LeetCode password</strong>.
+            It is used for a <strong style="color: var(--color-text-primary);">single request</strong> and
+            <strong style="color: var(--color-text-primary);">immediately discarded</strong> — never stored anywhere, never logged.
+          </p>
+          <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">
+            You can invalidate it at any time by <strong style="color: var(--color-text-primary);">logging out and back in</strong> on LeetCode
+            (sessions rotate naturally on re-login).
+          </p>
+          <p class="text-xs mt-1" style="color: var(--color-text-muted);">
+            This notice cannot be dismissed. Your security is non-negotiable.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- What you get -->
+    <div class="rounded-xl p-4" style="background: rgba(99,102,241,0.06);">
+      <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--color-brand-light);">What this unlocks</p>
+      <ul class="text-xs space-y-1.5" style="color: var(--color-text-secondary);">
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Top approach patterns you use (by topic)</li>
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Language distribution across your submissions</li>
+        <li class="flex items-center gap-2"><span class="text-emerald-400">✓</span> Status breakdown (AC, TLE, WA) by topic</li>
+        <li class="flex items-center gap-2"><span class="text-rose-400">✗</span> Your actual submitted code (never accessed)</li>
+      </ul>
+    </div>
+
+    <!-- Cookie input form -->
+    <form id="tier2-form" novalidate>
+      <label for="session-cookie-input" class="block text-sm font-medium mb-2" style="color: var(--color-text-secondary);">
+        Paste your LeetCode session cookie
+      </label>
+      <input
+        id="session-cookie-input"
+        type="password"
+        name="cookie"
+        maxlength="2000"
+        autocomplete="off"
+        spellcheck="false"
+        class="input-field font-mono text-xs"
+        placeholder="LEETCODE_SESSION=..."
+        aria-describedby="tier2-error"
+      />
+      <p class="text-xs mt-2" style="color: var(--color-text-muted);">
+        How to get it: F12 → Application → Cookies → leetcode.com → copy <code class="text-brand-400">LEETCODE_SESSION</code> value
+      </p>
+
+      <!-- Error -->
+      <div
+        id="tier2-error"
+        role="alert"
+        aria-live="polite"
+        class="hidden mt-3 rounded-xl px-4 py-3 text-sm border"
+        style="background: rgba(244,63,94,0.08); border-color: rgba(244,63,94,0.3); color: #fb7185;"
+      ></div>
+
+      <button
+        type="submit"
+        id="tier2-submit"
+        class="btn-brand mt-4 w-full justify-center py-3"
+        aria-label="Analyze with session cookie"
+      >
+        <span id="tier2-btn-text">Analyze submission patterns</span>
+        <span id="tier2-btn-loading" class="hidden">
+          <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          Analyzing…
+        </span>
+      </button>
+    </form>
+
+    <!-- Results area -->
+    <div id="tier2-results" class="hidden space-y-4" aria-live="polite">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-emerald-400 text-sm">✓</span>
+        <p class="text-sm font-semibold" style="color: var(--color-text-primary);">Analysis complete</p>
+      </div>
+      <div id="tier2-results-content"></div>
+    </div>
+  </div>
+</details>
+
+<script>
+  const details = document.getElementById('tier2-details') as HTMLDetailsElement | null;
+  const summary = details?.querySelector('summary');
+  const chevron = details?.querySelector('.tier2-chevron') as HTMLElement | null;
+  const form = document.getElementById('tier2-form') as HTMLFormElement | null;
+  const cookieInput = document.getElementById('session-cookie-input') as HTMLInputElement | null;
+  const errorDiv = document.getElementById('tier2-error') as HTMLDivElement | null;
+  const submitBtn = document.getElementById('tier2-submit') as HTMLButtonElement | null;
+  const btnText = document.getElementById('tier2-btn-text') as HTMLSpanElement | null;
+  const btnLoading = document.getElementById('tier2-btn-loading') as HTMLSpanElement | null;
+  const resultsDiv = document.getElementById('tier2-results') as HTMLDivElement | null;
+  const resultsContent = document.getElementById('tier2-results-content') as HTMLDivElement | null;
+
+  // Chevron toggle
+  details?.addEventListener('toggle', () => {
+    if (chevron) {
+      chevron.style.transform = details.open ? 'rotate(180deg)' : '';
+    }
+    summary?.setAttribute('aria-expanded', String(details?.open ?? false));
+  });
+
+  function setLoading(loading: boolean) {
+    if (!submitBtn || !btnText || !btnLoading) return;
+    submitBtn.disabled = loading;
+    btnText.classList.toggle('hidden', loading);
+    btnLoading.classList.toggle('hidden', !loading);
+  }
+
+  function showError(msg: string) {
+    if (!errorDiv) return;
+    errorDiv.textContent = msg;
+    errorDiv.classList.remove('hidden');
+  }
+
+  function clearError() {
+    if (!errorDiv) return;
+    errorDiv.classList.add('hidden');
+    errorDiv.textContent = '';
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const cookie = cookieInput?.value ?? '';
+    if (!cookie.trim() || cookie.length > 2000) {
+      showError('Please enter a valid session cookie (max 2000 characters).');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cookie }),
+      });
+
+      if (res.status === 401) {
+        showError('Authentication failed. Your session cookie may be expired — try logging out and back in on LeetCode.');
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        showError('LeetCode is temporarily unavailable. Please try again in a moment.');
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+
+      // Clear cookie from input immediately
+      if (cookieInput) cookieInput.value = '';
+
+      // Display results
+      if (resultsDiv && resultsContent) {
+        const topTopics: Array<{ topic: string; count: number }> = data.topTopics ?? [];
+        const langMix: Array<{ lang: string; count: number }> = data.languageMix ?? [];
+
+        resultsContent.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="rounded-xl p-4" style="background: rgba(99,102,241,0.06);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--color-brand-light);">Top Topics</p>
+              <div class="space-y-2">
+                ${topTopics.slice(0, 6).map(t => `
+                  <div class="flex items-center justify-between text-xs">
+                    <span style="color: var(--color-text-secondary);">${escapeHtml(t.topic)}</span>
+                    <span class="badge badge-medium">${t.count}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="rounded-xl p-4" style="background: rgba(99,102,241,0.06);">
+              <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--color-brand-light);">Language Mix</p>
+              <div class="space-y-2">
+                ${langMix.slice(0, 6).map(l => `
+                  <div class="flex items-center justify-between text-xs">
+                    <span style="color: var(--color-text-secondary);">${escapeHtml(l.lang)}</span>
+                    <span class="badge badge-easy">${l.count}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          <p class="text-xs mt-4" style="color: var(--color-text-muted);">
+            Total submissions analyzed: <strong style="color: var(--color-text-primary);">${data.submissionCount ?? 0}</strong>
+            ${data.avgRuntimeMs ? ` · Avg runtime: <strong style="color: var(--color-text-primary);">${data.avgRuntimeMs}ms</strong>` : ''}
+          </p>
+        `;
+        resultsDiv.classList.remove('hidden');
+      }
+
+      setLoading(false);
+    } catch {
+      showError('Network error. Please check your connection and try again.');
+      setLoading(false);
+    }
+  });
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+</script>

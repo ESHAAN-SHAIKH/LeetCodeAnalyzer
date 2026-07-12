@@ -1,0 +1,188 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'How to Calculate Time Complexity of Your Code | LeetCodeAnalyzer';
+const description = 'Big-O from scratch — rules for counting operations, common patterns, time vs space, and why constants still matter in practice.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Calculate Time Complexity of Your Code',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What does O(n) mean?',
+      acceptedAnswer: { '@type': 'Answer', text: 'O(n) means the runtime grows linearly with the size of the input. If you double the input, the algorithm takes roughly twice as long.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'When should I use O(n log n) vs O(n) sorting?',
+      acceptedAnswer: { '@type': 'Answer', text: 'If you only need a lookup (not a sorted order), prefer O(n) hash map. If you need sorted output or binary search, O(n log n) sorting is fine. Counting sort achieves O(n) when the value range is small.' },
+    },
+  ],
+};
+
+const patterns = [
+  { pattern: 'Single loop', complexity: 'O(n)', example: 'Linear scan, hash map build' },
+  { pattern: 'Nested loops (2 levels)', complexity: 'O(n²)', example: 'Brute-force pair search' },
+  { pattern: 'Nested loops (3 levels)', complexity: 'O(n³)', example: 'Triple brute-force' },
+  { pattern: 'Binary search / halving', complexity: 'O(log n)', example: 'Binary search, balanced BST' },
+  { pattern: 'Sort + scan', complexity: 'O(n log n)', example: 'Most comparison sorts' },
+  { pattern: 'Recursion with branching k=2', complexity: 'O(2ⁿ)', example: 'Fib without memoization' },
+  { pattern: 'Hash map lookup / insert', complexity: 'O(1) avg', example: 'Two Sum lookup' },
+  { pattern: 'Memoized recursion', complexity: 'O(n)', example: 'Top-down DP (each state once)' },
+];
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-brand-400 transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">Time Complexity</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8" aria-label="Article: How to Calculate Complexity">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--color-text-primary);">
+        How to Calculate Time Complexity of Your Code
+      </h1>
+      <p class="text-sm mb-10" style="color: var(--color-text-muted);">6 min read · LeetCodeAnalyzer</p>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">What Is Big-O Notation?</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Big-O describes how the <strong style="color: var(--color-text-primary);">runtime (or memory) of an algorithm scales</strong> as the input size
+          <code class="text-brand-400 bg-brand-500/10 px-1.5 py-0.5 rounded text-sm">n</code> grows toward infinity.
+          It answers: if I double my input, what happens to the runtime?
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          Formally, we say f(n) = O(g(n)) if there exist constants c and n₀ such that f(n) ≤ c·g(n) for all n ≥ n₀.
+          In practice, you rarely need that — you just need the rules below.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Rules for Counting Operations</h2>
+        <div class="space-y-3">
+          {[
+            { rule: 'Drop constants', detail: 'O(2n) → O(n). The constant factor doesn\'t change the growth class.' },
+            { rule: 'Drop non-dominant terms', detail: 'O(n² + n) → O(n²). The smaller term is irrelevant for large n.' },
+            { rule: 'Nested = multiply', detail: 'A loop inside a loop is O(n) × O(n) = O(n²).' },
+            { rule: 'Sequential = add then drop', detail: 'A loop followed by another loop is O(n) + O(n) = O(2n) → O(n).' },
+            { rule: 'Each recursion level = factor', detail: 'Each branching recursion multiplies the call count by the branch factor.' },
+          ].map(({ rule, detail }) => (
+            <div class="flex gap-3 rounded-xl p-4" style="background: rgba(99,102,241,0.06);">
+              <span class="text-brand-400 font-bold text-sm shrink-0 mt-0.5">→</span>
+              <div>
+                <p class="text-sm font-semibold" style="color: var(--color-text-primary);">{rule}</p>
+                <p class="text-sm mt-0.5" style="color: var(--color-text-secondary);">{detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Common Patterns and Their Complexities</h2>
+        <div class="overflow-x-auto rounded-xl border border-brand-500/20">
+          <table class="w-full text-sm" style="border-collapse: collapse;">
+            <thead>
+              <tr style="background: rgba(99,102,241,0.1); color: var(--color-text-primary);">
+                <th class="text-left p-3 font-semibold">Pattern</th>
+                <th class="text-left p-3 font-semibold">Time</th>
+                <th class="text-left p-3 font-semibold">Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patterns.map(({ pattern, complexity, example }, i) => (
+                <tr style={`background: ${i % 2 === 0 ? 'rgba(99,102,241,0.03)' : 'transparent'}; border-top: 1px solid rgba(99,102,241,0.1);`}>
+                  <td class="p-3" style="color: var(--color-text-primary);">{pattern}</td>
+                  <td class="p-3"><code class="text-brand-400 font-mono text-sm">{complexity}</code></td>
+                  <td class="p-3" style="color: var(--color-text-muted);">{example}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Time vs Space Complexity</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          <strong style="color: var(--color-text-primary);">Time complexity</strong> counts operations.
+          <strong style="color: var(--color-text-primary);">Space complexity</strong> counts memory.
+        </p>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Important distinction: <em>auxiliary space</em> (extra memory your algorithm allocates) vs <em>input space</em> (the input itself).
+          When interviewers ask "what's the space complexity?" they usually mean auxiliary space.
+        </p>
+        <div class="rounded-xl p-4 space-y-2" style="background: rgba(99,102,241,0.06);">
+          <p class="text-sm" style="color: var(--color-text-secondary);">
+            Example: Two Sum with a hash map uses <code class="text-brand-400">O(n)</code> auxiliary space (the map).
+            The brute-force nested loop version uses <code class="text-brand-400">O(1)</code> auxiliary space.
+            Time-space tradeoff — faster usually means more memory.
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Why Estimates Matter (And Their Limits)</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Big-O is a model. It tells you how runtime <em>scales</em>, not what the actual runtime is.
+          An O(n log n) algorithm with a tiny constant can easily outperform an O(n) algorithm with a huge constant for typical n.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          In interviews, Big-O gives you a shared vocabulary. In production, profile first.
+          Know the distinction between theoretical complexity and practical performance — interviewers respect engineers who can articulate both.
+        </p>
+      </section>
+
+      <div class="rounded-2xl p-6 text-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2);">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">Try the Complexity Checker</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          Paste your solution and see an instant complexity estimate — runs entirely in your browser.
+        </p>
+        <a href="/analyze" class="btn-brand">Open Solution Analyzer →</a>
+      </div>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-3">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-complexity-calc" />
+    </aside>
+  </div>
+</div>
+</Base>

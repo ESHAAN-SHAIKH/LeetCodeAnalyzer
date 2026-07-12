@@ -1,0 +1,149 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'How to Identify Your LeetCode Weak Topics | LeetCodeAnalyzer';
+const description = 'Pure problem count hides topic gaps. Here\'s how to identify your weakest LeetCode topics by tag coverage and fix them systematically.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Identify Your LeetCode Weak Topics',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are the most common weak LeetCode topics?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Statistically, Graphs, Dynamic Programming, and Backtracking have the lowest solve rates in Blind 75. They require understanding multi-step patterns that don\'t come as intuitively as array manipulation.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'How many problems should I do per weak topic?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Focus on 2–4 problems per pattern before moving to the next topic variation. Doing 10 sliding window problems back-to-back is more effective than doing 1 of each pattern.' },
+    },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16 font-sans">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs font-mono text-ink_text-muted">
+        <li><a href="/" class="hover:text-signal transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-signal transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium text-ink_text">Identify Weak Topics</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8 animate-fade-in" aria-label="Article: Identify Weak Topics">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight font-display text-ink_text">
+        How to Identify Your LeetCode Weak Topics
+      </h1>
+      <p class="text-sm mb-10" style="color: var(--color-text-muted);">4 min read · LeetCodeAnalyzer</p>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3 font-display" style="color: var(--color-text-primary);">Why Most Trackers Miss This</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Most spreadsheet trackers and checklists tell you <em>how many</em> problems you've done.
+          They don't tell you <em>which topics</em> are dragging you down.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          You can have solved 200 problems and still have zero solved in Graphs — one of the most common FAANG screen topics.
+          <strong style="color: var(--color-text-primary);">Topic coverage matters more than raw count.</strong>
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3 font-display" style="color: var(--color-text-primary);">The Tag-Coverage Approach</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          LeetCode tags every problem with one or more topics. Your solve history maps directly to tag coverage.
+          The metric to care about: <strong style="color: var(--color-text-primary);">solved / total problems in each tag</strong>.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          A tag where you've solved 1/12 problems (8%) is a gap. A tag where you've solved 7/8 (87%) is a strength.
+          Focus your prep time on gaps, not on adding more problems to your strengths.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4 font-display" style="color: var(--color-text-primary);">Common Weak Spots</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">Based on solve-rate patterns in Blind 75 and NeetCode 150:</p>
+        <div class="space-y-2">
+          {[
+            { topic: 'Graphs (BFS/DFS, topological sort)', why: 'Requires understanding when to use each traversal and how to represent graphs.' },
+            { topic: 'Dynamic Programming', why: 'The hardest pattern to learn — requires recognizing optimal substructure and building state transitions.' },
+            { topic: 'Backtracking', why: 'Often confused with BFS/DFS. Requires understanding the "undo" step.' },
+            { topic: 'Tries', why: 'A specialized data structure many engineers haven\'t used in production.' },
+            { topic: 'Heap / Priority Queue', why: 'Required for k-th element problems and greedy with ordering.' },
+          ].map(({ topic, why }) => (
+            <div class="rounded-xl p-4" style="background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.12);">
+              <p class="text-sm font-semibold mb-1" style="color: #fb7185;">{topic}</p>
+              <p class="text-xs" style="color: var(--color-text-secondary);">{why}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3 font-display" style="color: var(--color-text-primary);">How to Fix a Weak Topic</h2>
+        <div class="space-y-3">
+          {[
+            'Do 2–4 problems of the same pattern back-to-back, not one of each.',
+            'Watch one video explanation (NeetCode\'s are the best free resource) before your first attempt on a new pattern.',
+            'After solving, try to identify the pattern you used — can you articulate it in one sentence?',
+            'Come back to the same problems 1 week later without looking at your solution.',
+            'Move to the next topic only when you can solve 3 consecutive problems in the pattern without hints.',
+          ].map((step, i) => (
+            <div class="flex gap-3 items-start">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white" style="background: var(--color-signal);">{i + 1}</span>
+              <p class="text-sm leading-relaxed pt-0.5" style="color: var(--color-text-secondary);">{step}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div class="rounded-2xl p-6 text-center" class="rounded-xl p-6 text-center bg-surface-800/40 border border-surface-600">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">See Your Topic Breakdown</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          Enter your username to see which topics are your strongest and weakest — computed from your actual solve history.
+        </p>
+        <a href="/" class="btn-brand">Check My Topic Coverage →</a>
+      </div>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4 font-display" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-3">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group font-sans">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold transition-colors hover:bg-signal/5" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-weak-topics" />
+    </aside>
+  </div>
+</div>
+</Base>

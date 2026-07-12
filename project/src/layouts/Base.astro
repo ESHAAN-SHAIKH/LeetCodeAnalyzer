@@ -1,0 +1,341 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  noindex?: boolean;
+  ogTitle?: string;
+  ogDescription?: string;
+  jsonLd?: object | object[];
+}
+
+const {
+  title,
+  description = 'Check your real LeetCode coverage across Blind 75, NeetCode 150, and Grind 75 — auto-computed from your actual solves, not a checklist.',
+  canonical,
+  noindex = false,
+  ogTitle,
+  ogDescription,
+  jsonLd,
+} = Astro.props;
+
+const canonicalUrl = canonical ?? Astro.url.href;
+const fullTitle = title.includes('LeetCodeAnalyzer') ? title : `${title} | LeetCodeAnalyzer`;
+const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LeetCodeAnalyzer" />
+    <meta property="og:title" content={ogTitle ?? fullTitle} />
+    <meta property="og:description" content={ogDescription ?? description} />
+    <meta property="og:url" content={canonicalUrl} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle ?? fullTitle} />
+    <meta name="twitter:description" content={ogDescription ?? description} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Font preload — self-hosted Inter, no Google Fonts CDN -->
+    <link rel="preload" href="/fonts/inter/inter-400.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="/fonts/inter/inter-600.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <!-- JSON-LD structured data -->
+    {jsonLdArray.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+
+    <!-- Dark/light mode script (runs before paint to avoid FOUC) -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored ?? (prefersDark ? 'dark' : 'light');
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(theme);
+      })();
+    </script>
+
+    <!-- Cloudflare Web Analytics — cookieless, no GA anywhere -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+            data-cf-beacon='{"token": "YOUR_CF_ANALYTICS_TOKEN"}'></script>
+  </head>
+
+  <body class="min-h-screen antialiased" style="background-color: var(--color-surface-900); color: var(--color-text-primary);">
+
+    <!-- Skip to main content — keyboard accessibility -->
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-brand-600 focus:text-white focus:font-semibold">
+      Skip to main content
+    </a>
+
+    <!-- Cookie consent banner for EU/UK visitors (gates AdSense personalized ads) -->
+    <div id="cookie-banner"
+         role="dialog"
+         aria-label="Cookie consent"
+         aria-live="polite"
+         class="fixed bottom-0 left-0 right-0 z-50 hidden">
+      <div class="border-t border-brand-500/20 bg-surface-800/95 backdrop-blur-md px-4 py-4 sm:px-6">
+        <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex-1">
+            <p class="text-sm text-slate-300">
+              We use cookies for advertising (Google AdSense) to keep this tool free.
+              Analytics use <strong>Cloudflare Web Analytics</strong> — 100% cookieless.
+              Your pasted code <strong>never leaves your browser</strong>.
+              <a href="/privacy" class="underline text-brand-400 hover:text-brand-300 ml-1">Privacy Policy</a>
+            </p>
+          </div>
+          <div class="flex gap-3 shrink-0">
+            <button id="cookie-accept"
+                    class="btn-brand text-xs px-4 py-2"
+                    aria-label="Accept cookies and personalized ads">
+              Accept
+            </button>
+            <button id="cookie-reject"
+                    class="btn-ghost text-xs px-4 py-2"
+                    aria-label="Reject personalized ads, use non-personalized only">
+              Non-personalized only
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global navigation -->
+    <header class="sticky top-0 z-40 border-b border-brand-500/10 bg-surface-900/80 backdrop-blur-md" role="banner">
+      <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <div class="flex h-16 items-center justify-between">
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-2.5 group" aria-label="LeetCodeAnalyzer home">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-gradient shadow-brand-sm group-hover:shadow-brand-md transition-shadow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="text-base font-semibold tracking-tight" style="color: var(--color-text-primary);">
+              LeetCode<span class="text-brand-400">Analyzer</span>
+            </span>
+          </a>
+
+          <!-- Desktop nav links -->
+          <div class="hidden md:flex items-center gap-6">
+            <a href="/analyze" class="text-sm font-medium transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Solution Analyzer</a>
+            <a href="/guides" class="text-sm font-medium transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Guides</a>
+            <div class="relative" id="more-menu-wrapper">
+              <button id="more-menu-btn" aria-expanded="false" aria-haspopup="true"
+                class="text-sm font-medium transition-colors hover:text-brand-400 flex items-center gap-1"
+                style="color: var(--color-text-secondary);">
+                More
+                <svg class="h-3 w-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div id="more-dropdown" class="absolute right-0 top-8 hidden z-50 rounded-xl border shadow-lg py-1 min-w-36"
+                style="background: var(--color-surface-elevated); border-color: rgba(99,102,241,0.15);">
+                <a href="/about" class="block px-4 py-2 text-sm hover:text-brand-400 transition-colors" style="color: var(--color-text-secondary);">About</a>
+                <a href="/contact" class="block px-4 py-2 text-sm hover:text-brand-400 transition-colors" style="color: var(--color-text-secondary);">Contact</a>
+                <div class="mx-4 my-1 border-t" style="border-color: rgba(99,102,241,0.15);"></div>
+                <a href="/privacy" class="block px-4 py-2 text-sm hover:text-brand-400 transition-colors" style="color: var(--color-text-secondary);">Privacy</a>
+                <a href="/terms" class="block px-4 py-2 text-sm hover:text-brand-400 transition-colors" style="color: var(--color-text-secondary);">Terms</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right actions -->
+          <div class="flex items-center gap-3">
+            <!-- Theme toggle -->
+            <button id="theme-toggle"
+                    aria-label="Toggle light/dark mode"
+                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-brand-500/20 transition-all hover:border-brand-500/50 hover:bg-brand-500/10"
+                    style="color: var(--color-text-secondary);">
+              <!-- Sun icon (shown in dark mode to switch to light) -->
+              <svg id="icon-sun" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <!-- Moon icon (shown in light mode to switch to dark) -->
+              <svg id="icon-moon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn"
+                    class="md:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-brand-500/20"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    aria-label="Open menu"
+                    style="color: var(--color-text-secondary);">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+          <!-- Mobile menu -->
+          <div id="mobile-menu" class="hidden md:hidden py-4 border-t border-brand-500/10">
+            <div class="flex flex-col gap-2">
+              <a href="/analyze" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">Solution Analyzer</a>
+              <a href="/guides" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">Guides</a>
+              <div class="my-1 mx-3 border-t" style="border-color: rgba(99,102,241,0.15);"></div>
+              <a href="/about" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">About</a>
+              <a href="/contact" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">Contact</a>
+              <a href="/privacy" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">Privacy</a>
+              <a href="/terms" class="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-brand-500/10 hover:text-brand-400" style="color: var(--color-text-secondary);">Terms</a>
+            </div>
+          </div>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-24 border-t border-brand-500/10" role="contentinfo">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <!-- Brand -->
+          <div class="md:col-span-2">
+            <a href="/" class="flex items-center gap-2 mb-3" aria-label="LeetCodeAnalyzer home">
+              <span class="text-sm font-semibold">LeetCode<span class="text-brand-400">Analyzer</span></span>
+            </a>
+            <p class="text-xs leading-relaxed max-w-xs" style="color: var(--color-text-muted);">
+              Free LeetCode progress tracker. Auto-computes your Blind 75, NeetCode 150, and Grind 75 coverage from your actual solve history. Your code never leaves your browser.
+            </p>
+          </div>
+
+          <!-- Tools -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--color-text-muted);">Tools</h3>
+            <ul class="space-y-2">
+              <li><a href="/" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Progress Tracker</a></li>
+              <li><a href="/analyze" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Solution Analyzer</a></li>
+              <li><a href="/guides" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Guides</a></li>
+            </ul>
+          </div>
+
+          <!-- Legal -->
+          <div>
+            <h3 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color: var(--color-text-muted);">Company</h3>
+            <ul class="space-y-2">
+              <li><a href="/about" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">About</a></li>
+              <li><a href="/privacy" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Privacy Policy</a></li>
+              <li><a href="/terms" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Terms of Use</a></li>
+              <li><a href="/contact" class="text-xs transition-colors hover:text-brand-400" style="color: var(--color-text-secondary);">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-brand-500/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p class="text-xs" style="color: var(--color-text-muted);">
+            © {new Date().getFullYear()} LeetCodeAnalyzer. Not affiliated with LeetCode.
+          </p>
+          <p class="text-xs" style="color: var(--color-text-muted);">
+            Blind 75 by <a href="https://github.com/yangshun" class="hover:text-brand-400 underline" rel="noopener noreferrer">Yangshun Tay</a> ·
+            NeetCode 150 by <a href="https://neetcode.io" class="hover:text-brand-400 underline" rel="noopener noreferrer">NeetCode</a> ·
+            Grind 75 by <a href="https://grind75.com" class="hover:text-brand-400 underline" rel="noopener noreferrer">Yangshun Tay</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Interactive scripts -->
+    <script>
+      // Theme toggle
+      const themeToggle = document.getElementById('theme-toggle');
+      const iconSun = document.getElementById('icon-sun');
+      const iconMoon = document.getElementById('icon-moon');
+
+      function updateThemeIcons() {
+        const isDark = document.documentElement.classList.contains('dark');
+        iconSun?.classList.toggle('hidden', !isDark);
+        iconMoon?.classList.toggle('hidden', isDark);
+      }
+
+      themeToggle?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        const newTheme = isDark ? 'light' : 'dark';
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcons();
+      });
+
+      updateThemeIcons();
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenuBtn?.addEventListener('click', () => {
+        const isOpen = !mobileMenu?.classList.contains('hidden');
+        mobileMenu?.classList.toggle('hidden', isOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      // Cookie consent banner
+      // Only show to visitors who haven't consented yet
+      const consentKey = 'lca_cookie_consent';
+      const banner = document.getElementById('cookie-banner');
+      const acceptBtn = document.getElementById('cookie-accept');
+      const rejectBtn = document.getElementById('cookie-reject');
+
+      if (!localStorage.getItem(consentKey) && banner) {
+        banner.classList.remove('hidden');
+      }
+
+      acceptBtn?.addEventListener('click', () => {
+        localStorage.setItem(consentKey, 'accepted');
+        banner?.classList.add('hidden');
+        // Enable personalized AdSense ads (if loaded)
+        // @ts-ignore
+        if (typeof window.adsbygoogle !== 'undefined') {
+          // adsbygoogle is already initialised with personalized mode
+        }
+      });
+
+      rejectBtn?.addEventListener('click', () => {
+        localStorage.setItem(consentKey, 'non-personalized');
+        banner?.classList.add('hidden');
+        // Signal non-personalized preference to AdSense
+        // This is handled via the adsbygoogle config at init time
+      });
+
+      // More menu dropdown
+      const moreBtn = document.getElementById('more-menu-btn');
+      const moreDropdown = document.getElementById('more-dropdown');
+      if (moreBtn && moreDropdown) {
+        moreBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const open = moreDropdown.classList.toggle('hidden');
+          moreBtn.setAttribute('aria-expanded', String(!open));
+        });
+        document.addEventListener('click', () => {
+          moreDropdown.classList.add('hidden');
+          moreBtn.setAttribute('aria-expanded', 'false');
+        });
+      }
+    </script>
+  </body>
+</html>

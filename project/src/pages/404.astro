@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Page Not Found | LeetCodeAnalyzer"
+  description="This page doesn't exist. Head back to LeetCodeAnalyzer to analyze your LeetCode progress."
+>
+  <div class="min-h-[70vh] flex items-center justify-center px-4">
+    <div class="text-center max-w-md">
+      <div class="text-8xl font-extrabold mb-4" style="background: linear-gradient(135deg, #6366f1, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">404</div>
+      <h1 class="text-2xl font-bold mb-3" style="color: var(--color-text-primary);">Page not found</h1>
+      <p class="text-sm mb-8 leading-relaxed" style="color: var(--color-text-secondary);">The page you're looking for doesn't exist or has moved. Check your URL, or head back to start analyzing your LeetCode progress.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/" class="btn-brand">← Back to homepage</a>
+        <a href="/analyze" class="btn-ghost">Solution Analyzer</a>
+      </div>
+    </div>
+  </div>
+</Base>

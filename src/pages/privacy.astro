@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+
+const title = 'Privacy Policy | LeetCodeAnalyzer';
+const effectiveDate = '2025-01-01';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://leetcodeanalyzer.com/' },
+    { '@type': 'ListItem', 'position': 2, 'name': 'Privacy Policy', 'item': 'https://leetcodeanalyzer.com/privacy' },
+  ],
+};
+---
+
+<Base title={title} description="LeetCodeAnalyzer privacy policy — what we collect, what we never collect, and how we handle your data." jsonLd={[breadcrumbSchema]}>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 md:py-16 font-sans">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs font-mono text-ink_text-muted">
+        <li><a href="/" class="hover:text-signal transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium text-ink_text">Privacy Policy</li>
+      </ol>
+    </nav>
+
+    <h1 class="text-3xl font-extrabold mb-2 font-display text-ink_text">Privacy Policy</h1>
+    <p class="text-sm mb-10 font-mono" style="color: var(--color-text-muted);">Effective date: {effectiveDate}</p>
+
+    <div class="space-y-8 text-sm leading-relaxed text-ink_text-secondary">
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">What We Collect</h2>
+        <ul class="space-y-2">
+          <li class="flex gap-2"><span class="text-signal shrink-0">•</span><span><strong class="text-ink_text">LeetCode username:</strong> When you enter a username, it is sent to our server, used to fetch your public LeetCode profile via LeetCode's GraphQL API, and cached in Cloudflare KV for up to 1 hour to reduce API load. This is public data — anyone can look up a LeetCode username on leetcode.com.</span></li>
+          <li class="flex gap-2"><span class="text-signal shrink-0">•</span><span><strong class="text-ink_text">Analytics:</strong> We use <strong>Cloudflare Web Analytics</strong>, which is 100% cookieless. It collects aggregate page views and referrers. No personal identifiers, no cross-site tracking, no cookies.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">What We Do NOT Collect</h2>
+        <ul class="space-y-2">
+          <li class="flex gap-2"><span class="text-optimal shrink-0">✓</span><span><strong class="text-ink_text">Your pasted code</strong> is never sent to any server, API, or third party. The Solution Analyzer runs 100% client-side in your browser using bundled JavaScript. We cannot see your code.</span></li>
+          <li class="flex gap-2"><span class="text-optimal shrink-0">✓</span><span><strong class="text-ink_text">Session cookies</strong> are used for a single server-side request and immediately discarded. They are never written to any storage (KV, database, logs, or otherwise). They are never logged. They rotate naturally when you log out of LeetCode.</span></li>
+          <li class="flex gap-2"><span class="text-optimal shrink-0">✓</span><span>We do not collect email addresses, passwords, payment information, or any personally identifying information.</span></li>
+          <li class="flex gap-2"><span class="text-optimal shrink-0">✓</span><span>We do not sell data to third parties.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">Cookies</h2>
+        <p class="mb-3">
+          LeetCodeAnalyzer itself does not set analytics cookies. Cloudflare Web Analytics is cookieless by design.
+        </p>
+        <p class="mb-3">
+          <strong class="text-ink_text">Google AdSense:</strong> We display ads to keep this service free. Google AdSense may set cookies to personalize advertisements. A cookie consent banner is shown to EU/UK visitors before personalized ads are loaded. You can select "Non-personalized only" to opt out of personalized advertising while still seeing non-personalized ads.
+        </p>
+        <p>
+          You can manage or delete cookies at any time through your browser settings.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">Data Retention</h2>
+        <p>
+          Cached LeetCode profile data (username + public submission stats) is stored in Cloudflare KV with a 1-hour TTL.
+          After 1 hour, it is automatically deleted. We do not maintain a permanent database of user profiles.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">Third-Party Services</h2>
+        <ul class="space-y-2">
+          <li class="flex gap-2"><span class="text-signal shrink-0">•</span><span><strong class="text-ink_text">LeetCode GraphQL API</strong> — used to fetch public profile data. Subject to LeetCode's own privacy policy.</span></li>
+          <li class="flex gap-2"><span class="text-signal shrink-0">•</span><span><strong class="text-ink_text">Cloudflare</strong> — our CDN, KV storage, and analytics provider. Cloudflare's privacy policy applies to infrastructure-level data.</span></li>
+          <li class="flex gap-2"><span class="text-signal shrink-0">•</span><span><strong class="text-ink_text">Google AdSense</strong> — advertising. Subject to Google's privacy policy. Consent is requested before personalized ads load.</span></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">Your Rights</h2>
+        <p>
+          If you have questions about data we hold, please <a href="/contact" class="text-signal hover:text-signal-soft underline">contact us</a>.
+          Because we cache only public LeetCode data (tied to a public username, not to an account with us),
+          deletion of cached data happens automatically within 1 hour.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-bold mb-3 font-display text-ink_text">Contact</h2>
+        <p>
+          Questions about this privacy policy?
+          <a href="/contact" class="text-signal hover:text-signal-soft underline">Contact us</a> or see our <a href="/terms" class="text-signal hover:text-signal-soft underline">Terms of Use</a>.
+        </p>
+      </section>
+    </div>
+  </div>
+</Base>

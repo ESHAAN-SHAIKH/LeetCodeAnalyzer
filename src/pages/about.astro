@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+
+const title = 'About LeetCodeAnalyzer | LeetCodeAnalyzer';
+const description = 'Learn more about LeetCodeAnalyzer, how it tracks interview prep progress client-side, and our privacy commitments.';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://leetcodeanalyzer.com/' },
+    { '@type': 'ListItem', position: 2, name: 'About', item: 'https://leetcodeanalyzer.com/about' },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={breadcrumbSchema}>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 md:py-16 font-sans">
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs font-mono text-ink_text-muted">
+        <li><a href="/" class="hover:text-signal transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium text-ink_text">About</li>
+      </ol>
+    </nav>
+
+    <article class="space-y-8 animate-fade-in">
+      <header>
+        <p class="section-label mb-1">Our Mission</p>
+        <h1 class="text-3xl md:text-4xl font-extrabold font-display text-ink_text">
+          About LeetCodeAnalyzer
+        </h1>
+      </header>
+
+      <section class="space-y-4">
+        <p class="text-base leading-relaxed text-ink_text-secondary">
+          LeetCodeAnalyzer was created to solve a simple problem: the lack of honest, automatic progress tracking for coding interview prep.
+          Most trackers are manual checklists. You have to remember what you solved, check off boxes, and try to visualize your coverage yourself.
+        </p>
+        <p class="text-base leading-relaxed text-ink_text-secondary">
+          We believe there is a better way. By querying public data directly, LeetCodeAnalyzer maps your actual solve history against the three most popular interview prep lists:
+          <strong>Blind 75</strong>, <strong>NeetCode 150</strong>, and <strong>Grind 75</strong>. No checklists, no manuals. Just truth.
+        </p>
+      </section>
+
+      <hr class="border-surface-700" />
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold font-display text-ink_text">How It Works</h2>
+        <div class="grid grid-cols-1 gap-4">
+          <div class="card p-5 space-y-2">
+            <h3 class="font-semibold text-sm font-display text-signal">Tier 1: Public Progress Tracker</h3>
+            <p class="text-xs leading-relaxed text-ink_text-secondary">
+              Uses LeetCode's public GraphQL API to fetch your basic profile stats and recent accepted submissions. Computes difficulty breakdowns, topic heatmaps, and coverage percentages. Fully serverless via Cloudflare Pages and KV.
+            </p>
+          </div>
+          <div class="card p-5 space-y-2">
+            <h3 class="font-semibold text-sm font-display text-signal">Tier 1.5: Solution Analyzer</h3>
+            <p class="text-xs leading-relaxed text-ink_text-secondary">
+              A client-side syntax analyzer. Parses your code inside the browser (never sends it to a server), estimates time/space complexity, flags suboptimal techniques, and suggests better approaches.
+            </p>
+          </div>
+          <div class="card p-5 space-y-2">
+            <h3 class="font-semibold text-sm font-display text-signal">Tier 2: Historical Insights</h3>
+            <p class="text-xs leading-relaxed text-ink_text-secondary">
+              Queries your full historical submissions (using a session cookie) to find patterns, common failure clusters (like high TLE rates on certain topics), and coding speed trends. The cookie is used once and never stored.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="border-surface-700" />
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold font-display text-ink_text">Technology Stack</h2>
+        <p class="text-base leading-relaxed text-ink_text-secondary">
+          This web application is built with modern, high-performance web standards:
+        </p>
+        <ul class="list-disc pl-5 text-sm space-y-2 text-ink_text-secondary">
+          <li><strong>Astro.js</strong>: Server-side rendering (SSR) and fast static-site generation.</li>
+          <li><strong>Tailwind CSS</strong>: Modern styling with pure utility classes, custom design tokens, and dark-mode defaults.</li>
+          <li><strong>React</strong>: Interactive client-side components (like the Solution Analyzer).</li>
+          <li><strong>Cloudflare Pages & KV</strong>: Globally-distributed hosting, caching, and serverless edge functions.</li>
+        </ul>
+      </section>
+
+      <hr class="border-surface-700" />
+
+      <section class="space-y-4">
+        <h2 class="text-xl font-bold font-display text-ink_text">Our Privacy Commitment</h2>
+        <ul class="space-y-3">
+          <li class="flex gap-2">
+            <span class="text-optimal font-bold">✓</span>
+            <span class="text-sm text-ink_text-secondary"><strong>No code collection</strong>: Pasted solutions are parsed client-side and never sent to any server.</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="text-optimal font-bold">✓</span>
+            <span class="text-sm text-ink_text-secondary"><strong>Safe cookie usage</strong>: Session cookies are used for a single request, never logged, and never cached.</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="text-optimal font-bold">✓</span>
+            <span class="text-sm text-ink_text-secondary"><strong>Cookieless analytics</strong>: We use Cloudflare Web Analytics to measure site usage anonymously without storing cookies or tracking IP addresses.</span>
+          </li>
+        </ul>
+      </section>
+
+      <hr class="border-surface-700" />
+
+      <footer class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold font-display text-ink_text">Not Affiliated with LeetCode</h2>
+          <p class="text-xs mt-1 text-ink_text-muted">
+            LeetCode is a registered trademark of LeetCode, Inc. All prep lists belong to their respective authors.
+          </p>
+        </div>
+        <a href="/contact" class="btn-ghost shrink-0 font-sans">Get in touch →</a>
+      </footer>
+    </article>
+  </div>
+</Base>

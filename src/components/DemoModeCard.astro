@@ -1,0 +1,124 @@
+---
+import DifficultyBreakdown from './DifficultyBreakdown.astro';
+import CoverageCard from './CoverageCard.astro';
+
+// Fictional demo data — clearly labeled
+const demoUser = 'demo_user';
+
+const easy = { solved: 58, total: 867 };
+const medium = { solved: 47, total: 1834 };
+const hard = { solved: 5, total: 813 };
+
+// Demo coverage (fictional)
+const blind75Remaining = [
+  { slug: 'two-sum', title: 'Two Sum', difficulty: 'Easy', tags: ['Array', 'Hash Table'] },
+  { slug: 'maximum-subarray', title: 'Maximum Subarray', difficulty: 'Medium', tags: ['Array', 'DP'] },
+  { slug: 'meeting-rooms', title: 'Meeting Rooms', difficulty: 'Easy', tags: ['Array', 'Sorting'] },
+  { slug: 'number-of-islands', title: 'Number of Islands', difficulty: 'Medium', tags: ['DFS', 'BFS', 'Graph'] },
+  { slug: 'course-schedule', title: 'Course Schedule', difficulty: 'Medium', tags: ['Graph', 'DFS'] },
+  { slug: 'word-search', title: 'Word Search', difficulty: 'Medium', tags: ['Backtracking'] },
+  { slug: 'longest-increasing-subsequence', title: 'Longest Increasing Subsequence', difficulty: 'Medium', tags: ['DP'] },
+  { slug: 'house-robber', title: 'House Robber', difficulty: 'Medium', tags: ['DP'] },
+  { slug: 'combination-sum', title: 'Combination Sum', difficulty: 'Medium', tags: ['Backtracking'] },
+  { slug: 'decode-ways', title: 'Decode Ways', difficulty: 'Medium', tags: ['DP'] },
+  { slug: 'coin-change', title: 'Coin Change', difficulty: 'Medium', tags: ['DP'] },
+  { slug: 'min-cost-climbing-stairs', title: 'Min Cost Climbing Stairs', difficulty: 'Easy', tags: ['DP'] },
+  { slug: 'binary-tree-maximum-path-sum', title: 'Binary Tree Maximum Path Sum', difficulty: 'Hard', tags: ['Tree', 'DP'] },
+  { slug: 'serialize-and-deserialize-binary-tree', title: 'Serialize and Deserialize Binary Tree', difficulty: 'Hard', tags: ['Tree', 'Design'] },
+  { slug: 'graph-valid-tree', title: 'Graph Valid Tree', difficulty: 'Medium', tags: ['Graph', 'Union Find'] },
+  { slug: 'alien-dictionary', title: 'Alien Dictionary', difficulty: 'Hard', tags: ['Graph', 'Topo Sort'] },
+  { slug: 'longest-common-subsequence', title: 'Longest Common Subsequence', difficulty: 'Medium', tags: ['DP'] },
+  { slug: 'edit-distance', title: 'Edit Distance', difficulty: 'Hard', tags: ['DP'] },
+  { slug: 'burst-balloons', title: 'Burst Balloons', difficulty: 'Hard', tags: ['DP'] },
+  { slug: 'regular-expression-matching', title: 'Regular Expression Matching', difficulty: 'Hard', tags: ['DP'] },
+  { slug: 'word-break', title: 'Word Break', difficulty: 'Medium', tags: ['DP', 'Trie'] },
+  { slug: 'palindrome-partitioning', title: 'Palindrome Partitioning', difficulty: 'Medium', tags: ['Backtracking', 'DP'] },
+  { slug: 'unique-paths', title: 'Unique Paths', difficulty: 'Medium', tags: ['DP', 'Memoization'] },
+  { slug: 'jump-game', title: 'Jump Game', difficulty: 'Medium', tags: ['Greedy', 'DP'] },
+  { slug: 'spiral-matrix', title: 'Spiral Matrix', difficulty: 'Medium', tags: ['Array', 'Matrix'] },
+  { slug: 'rotate-image', title: 'Rotate Image', difficulty: 'Medium', tags: ['Array', 'Matrix'] },
+  { slug: 'set-matrix-zeroes', title: 'Set Matrix Zeroes', difficulty: 'Medium', tags: ['Array', 'Matrix'] },
+  { slug: 'pacific-atlantic-water-flow', title: 'Pacific Atlantic Water Flow', difficulty: 'Medium', tags: ['DFS', 'BFS', 'Graph'] },
+  { slug: 'longest-consecutive-sequence', title: 'Longest Consecutive Sequence', difficulty: 'Medium', tags: ['Array', 'Hash Table'] },
+  { slug: 'kth-smallest-element-in-a-bst', title: 'Kth Smallest Element in a BST', difficulty: 'Medium', tags: ['BST', 'Tree'] },
+  { slug: 'construct-binary-tree-from-preorder-and-inorder-traversal', title: 'Construct Binary Tree', difficulty: 'Medium', tags: ['Tree', 'DFS'] },
+  { slug: 'binary-tree-level-order-traversal', title: 'Binary Tree Level Order Traversal', difficulty: 'Medium', tags: ['BFS', 'Tree'] },
+  { slug: 'lowest-common-ancestor-of-a-binary-search-tree', title: 'LCA of BST', difficulty: 'Medium', tags: ['BST'] },
+  { slug: 'implement-trie-prefix-tree', title: 'Implement Trie', difficulty: 'Medium', tags: ['Trie', 'Design'] },
+  { slug: 'add-and-search-word-data-structure-design', title: 'Add and Search Word', difficulty: 'Medium', tags: ['Trie', 'DFS'] },
+  { slug: 'find-median-from-data-stream', title: 'Find Median From Data Stream', difficulty: 'Hard', tags: ['Heap', 'Design'] },
+  { slug: 'top-k-frequent-elements', title: 'Top K Frequent Elements', difficulty: 'Medium', tags: ['Heap', 'Bucket Sort'] },
+  { slug: 'design-add-and-search-words-data-structure', title: 'Word Dictionary Design', difficulty: 'Medium', tags: ['Trie'] },
+  { slug: 'word-search-ii', title: 'Word Search II', difficulty: 'Hard', tags: ['Trie', 'Backtracking'] },
+  { slug: 'merge-intervals', title: 'Merge Intervals', difficulty: 'Medium', tags: ['Array', 'Sorting'] },
+  { slug: 'non-overlapping-intervals', title: 'Non-overlapping Intervals', difficulty: 'Medium', tags: ['Greedy'] },
+  { slug: 'insert-interval', title: 'Insert Interval', difficulty: 'Medium', tags: ['Array'] },
+  { slug: 'minimum-window-substring', title: 'Minimum Window Substring', difficulty: 'Hard', tags: ['Sliding Window'] },
+  { slug: 'sliding-window-maximum', title: 'Sliding Window Maximum', difficulty: 'Hard', tags: ['Sliding Window', 'Deque'] },
+];
+
+const neetRemaining = blind75Remaining.slice(0, 102);
+const grindRemaining = blind75Remaining.slice(0, 48);
+---
+
+<div class="relative rounded-xl overflow-hidden border border-surface-600 bg-surface-800/40">
+  <!-- Demo Banner -->
+  <div class="flex items-center justify-center gap-3 px-4 py-3 border-b border-surface-600 bg-surface-900/60 font-sans">
+    <span class="badge" style="background: rgba(217, 164, 65, 0.15); color: var(--color-signal); letter-spacing: 0.1em; font-family: var(--font-mono);">DEMO</span>
+    <p class="text-sm font-medium" style="color: var(--color-text-secondary);">
+      Fictional data — enter your username above to see your real stats
+    </p>
+  </div>
+
+  <div class="p-6 md:p-8 space-y-6">
+    <!-- Demo user header -->
+    <div class="flex items-center gap-3 font-sans">
+      <div class="h-10 w-10 rounded border border-signal/20 bg-signal/10 flex items-center justify-center text-sm font-bold text-signal font-mono">D</div>
+      <div>
+        <p class="font-semibold" style="color: var(--color-text-primary);">@{demoUser}</p>
+        <p class="text-xs" style="color: var(--color-text-muted);">Fictional demo account</p>
+      </div>
+    </div>
+
+    <!-- Difficulty breakdown demo -->
+    <DifficultyBreakdown easy={easy} medium={medium} hard={hard} />
+
+    <!-- Coverage cards demo -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <CoverageCard
+        listName="blind75"
+        totalProblems={75}
+        solvedCount={31}
+        solvedSlugs={[]}
+        remainingProblems={blind75Remaining}
+        author="Yangshun Tay"
+        authorUrl="https://github.com/yangshun"
+      />
+      <CoverageCard
+        listName="neetcode150"
+        totalProblems={150}
+        solvedCount={48}
+        solvedSlugs={[]}
+        remainingProblems={neetRemaining}
+        author="NeetCode"
+        authorUrl="https://neetcode.io"
+      />
+      <CoverageCard
+        listName="grind75"
+        totalProblems={75}
+        solvedCount={27}
+        solvedSlugs={[]}
+        remainingProblems={grindRemaining}
+        author="Yangshun Tay"
+        authorUrl="https://grind75.com"
+      />
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center pt-2 font-sans">
+      <p class="text-sm font-medium" style="color: var(--color-text-muted);">
+        ↑ Enter your LeetCode username above to see <strong style="color: var(--color-text-primary);">your actual coverage</strong>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,155 @@
+---
+// ProfileSearch.astro — standalone search form with loading/error states
+---
+
+<section class="w-full max-w-2xl mx-auto font-sans" aria-label="LeetCode username search">
+  <form
+    id="profile-search-form"
+    class="relative flex flex-col sm:flex-row gap-3"
+    novalidate
+    aria-describedby="search-error-msg"
+  >
+    <div class="relative flex-1">
+      <label for="username-input" class="sr-only">LeetCode username</label>
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg class="h-5 w-5" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <input
+        id="username-input"
+        type="text"
+        name="username"
+        placeholder="Enter your LeetCode username"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        maxlength="25"
+        class="w-full rounded-xl border border-surface-600 bg-surface-800/80 pl-11 pr-4 py-4 text-base font-medium transition-all focus:outline-none focus:border-signal/60 focus:ring-1 focus:ring-signal/30 backdrop-blur-sm"
+        style="color: var(--color-text-primary);"
+        aria-required="true"
+        aria-label="LeetCode username"
+      />
+    </div>
+
+    <button
+      id="search-submit-btn"
+      type="submit"
+      class="btn-brand px-8 py-4 text-base rounded-xl shrink-0 relative overflow-hidden font-sans group"
+      aria-label="Analyze LeetCode profile"
+    >
+      <!-- Default state -->
+      <span id="btn-text" class="flex items-center gap-2 transition-opacity">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M22 4 12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Analyze
+      </span>
+      <!-- Loading state -->
+      <span id="btn-loading" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity">
+        <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+      </span>
+    </button>
+  </form>
+
+  <!-- Error message area -->
+  <div
+    id="search-error-msg"
+    role="alert"
+    aria-live="polite"
+    class="mt-3 hidden rounded-lg px-4 py-3 text-sm font-medium border"
+    style="background: rgba(193, 82, 61, 0.08); border-color: rgba(193, 82, 61, 0.3); color: var(--color-danger);"
+  >
+    <span id="error-icon" class="mr-2" aria-hidden="true">⚠️</span>
+    <span id="error-text"></span>
+  </div>
+
+  <!-- Secondary CTA -->
+  <p class="mt-4 text-center text-sm" style="color: var(--color-text-muted);">
+    Just want to analyze a single solution?
+    <a href="/analyze" class="ml-1 font-medium text-signal hover:text-signal-soft transition-colors underline underline-offset-2">
+      Solution Analyzer →
+    </a>
+  </p>
+</section>
+
+<script>
+  const form = document.getElementById('profile-search-form') as HTMLFormElement | null;
+  const input = document.getElementById('username-input') as HTMLInputElement | null;
+  const submitBtn = document.getElementById('search-submit-btn') as HTMLButtonElement | null;
+  const btnText = document.getElementById('btn-text') as HTMLSpanElement | null;
+  const btnLoading = document.getElementById('btn-loading') as HTMLSpanElement | null;
+  const errorMsg = document.getElementById('search-error-msg') as HTMLDivElement | null;
+  const errorText = document.getElementById('error-text') as HTMLSpanElement | null;
+
+  const USERNAME_RE = /^[a-zA-Z0-9_-]{1,25}$/;
+
+  function setLoading(loading: boolean) {
+    if (!submitBtn || !btnText || !btnLoading) return;
+    submitBtn.disabled = loading;
+    btnText.style.opacity = loading ? '0' : '1';
+    btnLoading.style.opacity = loading ? '1' : '0';
+  }
+
+  function showError(message: string) {
+    if (!errorMsg || !errorText) return;
+    errorText.textContent = message;
+    errorMsg.classList.remove('hidden');
+  }
+
+  function clearError() {
+    if (!errorMsg) return;
+    errorMsg.classList.add('hidden');
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const username = input?.value.trim() ?? '';
+
+    if (!USERNAME_RE.test(username)) {
+      showError('Please enter a valid LeetCode username (1–25 characters, letters, numbers, _ or -).');
+      input?.focus();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/profile?username=${encodeURIComponent(username)}`);
+
+      if (res.status === 404) {
+        showError(`No LeetCode profile found for "@${username}". Double-check the username.`);
+        setLoading(false);
+        return;
+      }
+
+      if (res.status === 503) {
+        showError('LeetCode is temporarily unavailable. Please try again in a moment.');
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        showError('Something went wrong. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      // Success — navigate to user results page
+      window.location.href = `/u/${encodeURIComponent(username)}`;
+    } catch {
+      showError('Network error. Please check your connection and try again.');
+      setLoading(false);
+    }
+  });
+
+  // Clear error on input change
+  input?.addEventListener('input', clearError);
+</script>

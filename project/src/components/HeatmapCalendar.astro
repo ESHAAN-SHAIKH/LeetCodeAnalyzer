@@ -1,0 +1,196 @@
+---
+interface Props {
+  submissionCalendar: Record<string, number> | null | undefined;
+}
+
+const { submissionCalendar } = Astro.props;
+
+// Parse and build the calendar grid
+const calendar: Record<string, number> = submissionCalendar ?? {};
+const hasData = Object.keys(calendar).length > 0;
+
+// Build 52-week grid ending today
+const today = new Date();
+const gridDays: Array<{ timestamp: number; count: number; dateStr: string }> = [];
+
+for (let i = 364; i >= 0; i--) {
+  const d = new Date(today);
+  d.setDate(d.getDate() - i);
+  d.setHours(0, 0, 0, 0);
+  const ts = Math.floor(d.getTime() / 1000);
+  const dateStr = d.toISOString().slice(0, 10);
+  // Try both exact and rounded timestamps
+  const count = calendar[String(ts)] ?? 0;
+  gridDays.push({ timestamp: ts, count, dateStr });
+}
+
+// Fill to complete first week column
+const firstDayOfWeek = gridDays[0] ? new Date(gridDays[0].timestamp * 1000).getDay() : 0;
+const padding = firstDayOfWeek; // number of empty cells at start
+
+// Build weeks (columns)
+const allCells = [
+  ...Array(padding).fill(null),
+  ...gridDays,
+];
+
+const weeks: Array<Array<{ timestamp: number; count: number; dateStr: string } | null>> = [];
+for (let i = 0; i < allCells.length; i += 7) {
+  weeks.push(allCells.slice(i, i + 7) as any);
+}
+
+// Month labels
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const monthLabels: Array<{ label: string; colIndex: number }> = [];
+let lastMonth = -1;
+weeks.forEach((week, wi) => {
+  const firstReal = week.find(Boolean);
+  if (!firstReal) return;
+  const m = new Date(firstReal.timestamp * 1000).getMonth();
+  if (m !== lastMonth) {
+    monthLabels.push({ label: monthNames[m], colIndex: wi });
+    lastMonth = m;
+  }
+});
+
+// Stats
+const totalSubmissions = gridDays.reduce((s, d) => s + d.count, 0);
+
+// Streak calculation
+let streak = 0;
+let checkDate = new Date(today);
+for (let i = gridDays.length - 1; i >= 0; i--) {
+  const d = gridDays[i];
+  if (d.count > 0) {
+    streak++;
+  } else {
+    // Allow today to have 0 — check yesterday
+    if (i === gridDays.length - 1) continue;
+    break;
+  }
+}
+
+function getColor(count: number): string {
+  if (count === 0) return 'rgba(99,102,241,0.06)';
+  if (count === 1) return 'rgba(99,102,241,0.3)';
+  if (count <= 3) return 'rgba(99,102,241,0.55)';
+  return '#6366f1';
+}
+
+const CELL = 12;
+const GAP = 2;
+const CELL_STRIDE = CELL + GAP;
+const LEFT_OFFSET = 24; // weekday labels width
+const TOP_OFFSET = 20;  // month labels height
+
+const svgWidth = LEFT_OFFSET + weeks.length * CELL_STRIDE;
+const svgHeight = TOP_OFFSET + 7 * CELL_STRIDE;
+
+// Also build a 26-week (mobile) subset — last 26 weeks
+const mobileWeeks = weeks.slice(Math.max(0, weeks.length - 26));
+const mobileSvgWidth = LEFT_OFFSET + mobileWeeks.length * CELL_STRIDE;
+---
+
+<div class="card p-6" aria-label="Contribution heatmap calendar">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-base font-semibold" style="color: var(--color-text-primary);">Activity Heatmap</h3>
+    <div class="flex items-center gap-4 text-xs" style="color: var(--color-text-muted);">
+      <span><strong class="text-brand-400">{totalSubmissions}</strong> submissions</span>
+      <span><strong class="text-brand-400">{streak}</strong> day streak</span>
+    </div>
+  </div>
+
+  {!hasData ? (
+    <div class="rounded-xl py-10 text-center" style="background: rgba(99,102,241,0.06);">
+      <p class="text-sm" style="color: var(--color-text-muted);">No submission history available</p>
+      <div class="mt-4 flex justify-center gap-1">
+        {Array(52).fill(null).map((_, i) => (
+          <div class="skeleton rounded-sm" style="width: 12px; height: 84px;" />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div>
+      {/* Desktop: 52 weeks */}
+      <div class="hidden sm:block overflow-x-auto">
+        <svg
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          width={svgWidth}
+          height={svgHeight}
+          aria-hidden="true"
+          style="min-width: 0; max-width: 100%;"
+        >
+          <!-- Month labels -->
+          {monthLabels.map(({ label, colIndex }) => (
+            <text x={LEFT_OFFSET + colIndex * CELL_STRIDE} y={13} font-size="9" fill="#64748b" font-family="Inter, system-ui, sans-serif">{label}</text>
+          ))}
+          <!-- Weekday labels -->
+          {[['M', 1], ['W', 3], ['F', 5]].map(([label, row]) => (
+            <text x={0} y={TOP_OFFSET + (row as number) * CELL_STRIDE + CELL - 2} font-size="8" fill="#64748b" font-family="Inter, system-ui, sans-serif">{label}</text>
+          ))}
+          <!-- Calendar cells -->
+          {weeks.map((week, wi) =>
+            week.map((day, di) => {
+              if (!day) return null;
+              const x = LEFT_OFFSET + wi * CELL_STRIDE;
+              const y = TOP_OFFSET + di * CELL_STRIDE;
+              return (
+                <rect x={x} y={y} width={CELL} height={CELL} rx="2" fill={getColor(day.count)}>
+                  <title>{day.count > 0 ? `${day.count} submission${day.count !== 1 ? 's' : ''} on ${day.dateStr}` : `No submissions on ${day.dateStr}`}</title>
+                </rect>
+              );
+            })
+          )}
+        </svg>
+      </div>
+
+      {/* Mobile: 26 weeks */}
+      <div class="sm:hidden overflow-x-auto">
+        <svg
+          viewBox={`0 0 ${mobileSvgWidth} ${svgHeight}`}
+          width={mobileSvgWidth}
+          height={svgHeight}
+          aria-hidden="true"
+          style="min-width: 0; max-width: 100%;"
+        >
+          <!-- Month labels (mobile) -->
+          {monthLabels
+            .filter(ml => ml.colIndex >= weeks.length - 26)
+            .map(({ label, colIndex }) => (
+              <text
+                x={LEFT_OFFSET + (colIndex - (weeks.length - mobileWeeks.length)) * CELL_STRIDE}
+                y={13} font-size="9" fill="#64748b" font-family="Inter, system-ui, sans-serif"
+              >{label}</text>
+            ))
+          }
+          <!-- Weekday labels -->
+          {[['M', 1], ['W', 3], ['F', 5]].map(([label, row]) => (
+            <text x={0} y={TOP_OFFSET + (row as number) * CELL_STRIDE + CELL - 2} font-size="8" fill="#64748b" font-family="Inter, system-ui, sans-serif">{label}</text>
+          ))}
+          <!-- Calendar cells (mobile: last 26 weeks) -->
+          {mobileWeeks.map((week, wi) =>
+            week.map((day, di) => {
+              if (!day) return null;
+              const x = LEFT_OFFSET + wi * CELL_STRIDE;
+              const y = TOP_OFFSET + di * CELL_STRIDE;
+              return (
+                <rect x={x} y={y} width={CELL} height={CELL} rx="2" fill={getColor(day.count)}>
+                  <title>{day.count > 0 ? `${day.count} submission${day.count !== 1 ? 's' : ''} on ${day.dateStr}` : `No submissions on ${day.dateStr}`}</title>
+                </rect>
+              );
+            })
+          )}
+        </svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="flex items-center gap-2 mt-3 justify-end text-xs" style="color: var(--color-text-muted);">
+        <span>Less</span>
+        {[0, 1, 2, 4, 6].map(count => (
+          <div class="rounded-sm" style={`width: 12px; height: 12px; background: ${getColor(count)};`} />
+        ))}
+        <span>More</span>
+      </div>
+    </div>
+  )}
+</div>

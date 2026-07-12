@@ -1,0 +1,192 @@
+---
+interface Props {
+  listName: 'blind75' | 'neetcode150' | 'grind75';
+  totalProblems: number;
+  solvedCount: number;
+  solvedSlugs: string[];
+  remainingProblems: Array<{ slug: string; title: string; difficulty: string; tags: string[] }>;
+  author: string;
+  authorUrl: string;
+}
+
+const {
+  listName,
+  totalProblems,
+  solvedCount,
+  remainingProblems,
+  author,
+  authorUrl,
+} = Astro.props;
+
+const listTitles: Record<string, string> = {
+  blind75: 'Blind 75',
+  neetcode150: 'NeetCode 150',
+  grind75: 'Grind 75',
+};
+const displayName = listTitles[listName] ?? listName;
+
+const pct = totalProblems > 0 ? (solvedCount / totalProblems) * 100 : 0;
+const pctRounded = Math.round(pct);
+
+// SVG ring math — circumference = 2π × 54 ≈ 339.3
+const RADIUS = 54;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const dashOffset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+
+// Color based on percentage
+const ringColor =
+  pct >= 80 ? '#10b981' // emerald
+  : pct >= 50 ? '#f59e0b' // amber
+  : '#6366f1'; // brand-indigo (< 50%)
+
+const ringId = `ring-${listName}`;
+---
+
+<article
+  class="card p-6 flex flex-col gap-5 animate-fade-in"
+  aria-label={`${displayName} coverage card`}
+>
+  <!-- Header -->
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h3 class="text-lg font-bold" style="color: var(--color-text-primary);">{displayName}</h3>
+      <p class="text-xs mt-0.5" style="color: var(--color-text-muted);">
+        by <a
+          href={authorUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-brand-400 transition-colors underline underline-offset-2"
+          style="color: var(--color-text-secondary);"
+        >{author}</a>
+      </p>
+    </div>
+    <!-- Progress ring -->
+    <div class="relative shrink-0" style={`--ring-offset: ${dashOffset};`}>
+      <svg width="80" height="80" viewBox="0 0 128 128" role="img" aria-label={`${pctRounded}% complete`}>
+        <!-- Track -->
+        <circle
+          cx="64" cy="64" r={RADIUS}
+          fill="none"
+          stroke="rgba(99,102,241,0.12)"
+          stroke-width="10"
+        />
+        <!-- Progress arc -->
+        <circle
+          id={ringId}
+          cx="64" cy="64" r={RADIUS}
+          fill="none"
+          stroke={ringColor}
+          stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray={CIRCUMFERENCE}
+          stroke-dashoffset={CIRCUMFERENCE}
+          transform="rotate(-90 64 64)"
+          style={`--ring-offset: ${dashOffset}; animation: ringFill 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;`}
+        />
+        <!-- Center text -->
+        <text x="64" y="58" text-anchor="middle" font-size="16" font-weight="700" fill={ringColor}>{solvedCount}</text>
+        <text x="64" y="76" text-anchor="middle" font-size="10" fill="#64748b">/ {totalProblems}</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="flex items-center gap-4">
+    <div class="flex-1 rounded-xl px-4 py-3" style="background: rgba(99,102,241,0.08);">
+      <p class="text-xs font-medium mb-1" style="color: var(--color-text-muted);">Solved</p>
+      <p class="text-xl font-bold" style={`color: ${ringColor};`}>{pctRounded}%</p>
+    </div>
+    <div class="flex-1 rounded-xl px-4 py-3" style="background: rgba(99,102,241,0.08);">
+      <p class="text-xs font-medium mb-1" style="color: var(--color-text-muted);">Remaining</p>
+      <p class="text-xl font-bold" style="color: var(--color-text-primary);">{totalProblems - solvedCount}</p>
+    </div>
+  </div>
+
+  <!-- Expandable remaining section -->
+  {remainingProblems.length > 0 && (
+    <details class="group">
+      <summary
+        class="flex items-center justify-between cursor-pointer select-none list-none text-sm font-semibold py-2 px-3 rounded-xl transition-colors hover:bg-brand-500/10"
+        style="color: var(--color-brand-light);"
+      >
+        <span>What's left ({remainingProblems.length} problems)</span>
+        <svg
+          class="h-4 w-4 transition-transform group-open:rotate-180"
+          viewBox="0 0 24 24" fill="none" aria-hidden="true"
+        >
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </summary>
+
+      <div class="mt-3 space-y-1.5 max-h-72 overflow-y-auto pr-1" id={`remaining-${listName}`}>
+        {remainingProblems.slice(0, 10).map((p) => (
+          <a
+            href={`https://leetcode.com/problems/${p.slug}/`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs transition-colors hover:bg-brand-500/10 group/item"
+          >
+            <span class="flex-1 truncate font-medium group-hover/item:text-brand-300 transition-colors" style="color: var(--color-text-secondary);">
+              {p.title}
+            </span>
+            <span class={`badge badge-${p.difficulty.toLowerCase()} shrink-0`}>
+              {p.difficulty}
+            </span>
+          </a>
+        ))}
+        {remainingProblems.length > 10 && (
+          <div id={`show-more-${listName}`}>
+            <button
+              type="button"
+              class="w-full text-center text-xs py-2 rounded-lg transition-colors hover:bg-brand-500/10 font-medium"
+              style="color: var(--color-brand-light);"
+              data-list={listName}
+              onclick={`showAllRemaining('${listName}')`}
+            >
+              Show all {remainingProblems.length} remaining →
+            </button>
+            <div id={`remaining-all-${listName}`} class="hidden space-y-1.5 mt-1.5">
+              {remainingProblems.slice(10).map((p) => (
+                <a
+                  href={`https://leetcode.com/problems/${p.slug}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs transition-colors hover:bg-brand-500/10 group/item"
+                >
+                  <span class="flex-1 truncate font-medium group-hover/item:text-brand-300 transition-colors" style="color: var(--color-text-secondary);">
+                    {p.title}
+                  </span>
+                  <span class={`badge badge-${p.difficulty.toLowerCase()} shrink-0`}>
+                    {p.difficulty}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </details>
+  )}
+
+  {remainingProblems.length === 0 && solvedCount === totalProblems && (
+    <div class="flex items-center gap-2 text-sm font-semibold" style="color: #10b981;">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M22 4 12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      List complete! 🎉
+    </div>
+  )}
+</article>
+
+<script>
+  function showAllRemaining(listName: string) {
+    const btn = document.getElementById(`show-more-${listName}`);
+    const all = document.getElementById(`remaining-all-${listName}`);
+    if (btn && all) {
+      btn.style.display = 'none';
+      all.classList.remove('hidden');
+    }
+  }
+  (window as any).showAllRemaining = showAllRemaining;
+</script>

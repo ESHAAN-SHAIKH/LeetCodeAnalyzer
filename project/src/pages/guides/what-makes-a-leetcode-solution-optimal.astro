@@ -1,0 +1,162 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'What Makes a LeetCode Solution Optimal? | LeetCodeAnalyzer';
+const description = 'Optimal doesn\'t always mean fastest asymptotically. Learn upgrade paths from O(n²) to O(n), red flags in code, and interview vs production tradeoffs.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'What Makes a LeetCode Solution Optimal?',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is O(n log n) always worse than O(n)?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Not in practice. For typical interview inputs (n ≤ 10⁵), an O(n log n) solution with small constants is often faster than an O(n) solution with large constants. The asymptotic bound is a rough guide, not a performance guarantee.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'When should I use a hash map in LeetCode problems?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Whenever you\'re doing repeated lookups in a collection. If you find yourself iterating over an array to find an element you\'ve already visited, a hash map turns that O(n) lookup into O(1).' },
+    },
+  ],
+};
+
+const upgradePaths = [
+  { from: 'O(n²)', to: 'O(n)', how: 'Replace inner search loop with hash map', example: 'Two Sum: nested loop → dict lookup' },
+  { from: 'O(n log n)', to: 'O(n)', how: 'Counting sort or bucket sort when value range is small', example: 'k most frequent: sort → bucket sort' },
+  { from: 'Recursive O(2ⁿ)', to: 'O(n)', how: 'Add memoization (top-down DP)', example: 'Fibonacci: plain recursion → memo dict' },
+  { from: 'O(n) extra space', to: 'O(1)', how: 'In-place manipulation with two pointers', example: 'Reverse array: new array → in-place swap' },
+];
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-brand-400 transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">What Makes a Solution Optimal?</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8 animate-fade-in" aria-label="Article: Optimal Solutions">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--color-text-primary);">
+        What Makes a LeetCode Solution Optimal?
+      </h1>
+      <p class="text-sm mb-10" style="color: var(--color-text-muted);">5 min read · LeetCodeAnalyzer</p>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Optimal Doesn't Always Mean Fastest Asymptotically</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          The instinct is to always chase the lowest Big-O. But in practice — and especially in interviews —
+          <strong style="color: var(--color-text-primary);">the "optimal" solution is the one that's correct, clear, and efficient enough for the problem's constraints.</strong>
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          An O(n log n) solution with clean, readable code often beats an obscure O(n) trick in interview settings.
+          Constants matter. Clarity matters. Correctness definitely matters.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Common Upgrade Paths</h2>
+        <div class="overflow-x-auto rounded-xl border border-brand-500/20">
+          <table class="w-full text-sm" style="border-collapse: collapse;">
+            <thead>
+              <tr style="background: rgba(99,102,241,0.1); color: var(--color-text-primary);">
+                <th class="text-left p-3 font-semibold">From</th>
+                <th class="text-left p-3 font-semibold">To</th>
+                <th class="text-left p-3 font-semibold">How</th>
+                <th class="text-left p-3 font-semibold">Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              {upgradePaths.map(({ from, to, how, example }, i) => (
+                <tr style={`background: ${i % 2 === 0 ? 'rgba(99,102,241,0.03)' : 'transparent'}; border-top: 1px solid rgba(99,102,241,0.1);`}>
+                  <td class="p-3"><code class="text-rose-400 font-mono text-xs">{from}</code></td>
+                  <td class="p-3"><code class="text-emerald-400 font-mono text-xs">{to}</code></td>
+                  <td class="p-3" style="color: var(--color-text-secondary);">{how}</td>
+                  <td class="p-3 text-xs" style="color: var(--color-text-muted);">{example}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Red Flags in Your Code</h2>
+        <div class="space-y-3">
+          {[
+            { flag: 'Nested loops on searchable data', fix: 'Ask: can the inner loop be replaced with a hash map or binary search lookup?' },
+            { flag: 'Sorting when you only need O(1) lookup', fix: 'If you sort just to check membership, use a set instead. O(n) vs O(n log n).' },
+            { flag: 'Recursion without memoization on overlapping subproblems', fix: 'If the same subproblem is computed more than once, add a memo dict. Exponential → polynomial.' },
+            { flag: 'Rebuilding a data structure on every call', fix: 'Precompute prefix sums, sorted orders, or frequency maps once before the main loop.' },
+          ].map(({ flag, fix }) => (
+            <div class="rounded-xl p-4" style="background: rgba(244,63,94,0.06); border: 1px solid rgba(244,63,94,0.15);">
+              <p class="text-sm font-semibold mb-1" style="color: #fb7185;">🚩 {flag}</p>
+              <p class="text-sm" style="color: var(--color-text-secondary);">{fix}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Interview vs Production Tradeoffs</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          In interviews, the interviewer is also evaluating <em>how you think</em>.
+          A clean O(n) solution that you can walk through clearly is better than an O(n) bitwise trick you can barely explain.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          In production, profile before optimizing. The difference between O(n) and O(n log n) rarely matters until n exceeds tens of millions.
+          Code readability and maintainability compound over time in ways that micro-optimizations don't.
+        </p>
+      </section>
+
+      <div class="rounded-2xl p-6 text-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2);">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">Analyze Your Own Solution</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          Paste your code and get an instant complexity estimate — runs entirely in your browser.
+        </p>
+        <a href="/analyze" class="btn-brand">Open Solution Analyzer →</a>
+      </div>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-3">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-optimal-solution" />
+    </aside>
+  </div>
+</div>
+</Base>

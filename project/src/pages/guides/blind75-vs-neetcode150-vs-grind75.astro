@@ -1,0 +1,214 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'Blind 75 vs NeetCode 150 vs Grind 75: Which List Should You Do? | LeetCodeAnalyzer';
+const description = 'Compare Blind 75, NeetCode 150, and Grind 75 side-by-side. Get concrete recommendations based on your timeline and interview goals.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Blind 75 vs NeetCode 150 vs Grind 75: Which List Should You Do?',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+  url: 'https://leetcodeanalyzer.com/guides/blind75-vs-neetcode150-vs-grind75',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is Blind 75 still relevant in 2025?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. The 75 problems cover all the core patterns that appear in FAANG/MAANG screens. The list is older but the patterns it covers — arrays, trees, graphs, DP — have not changed.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between Grind 75 and Blind 75?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Both were created by Yangshun Tay. Blind 75 is a fixed list of 75 problems. Grind 75 is a dynamic successor that adjusts from 75 to 169 problems based on your available time budget, with a week-by-week study plan.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Should I do all three lists?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'If you are serious about FAANG and have 2–3 months, doing all three is worthwhile — there is significant overlap (≈40 problems appear in multiple lists), so the marginal work is less than it appears.',
+      },
+    },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://leetcodeanalyzer.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://leetcodeanalyzer.com/guides' },
+    { '@type': 'ListItem', position: 3, name: 'Blind 75 vs NeetCode 150 vs Grind 75', item: 'https://leetcodeanalyzer.com/guides/blind75-vs-neetcode150-vs-grind75' },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema, breadcrumbSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-brand-400 transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">Blind 75 vs NeetCode 150 vs Grind 75</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8 prose-custom" aria-label="Article: Blind 75 vs NeetCode 150 vs Grind 75">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--color-text-primary);">
+        Blind 75 vs NeetCode 150 vs Grind 75: Which List Should You Do?
+      </h1>
+      <p class="text-sm mb-8" style="color: var(--color-text-muted);">5 min read · LeetCodeAnalyzer</p>
+
+      <!-- What is Blind 75 -->
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">What Is Blind 75?</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Blind 75 is a curated list of 75 LeetCode problems compiled by <strong style="color: var(--color-text-primary);">Yangshun Tay</strong>,
+          a Facebook (Meta) engineer who assembled it while preparing for FAANG interviews around 2018.
+          He posted it to the Blind job forum, where it went viral and became the de-facto starting point for coding interview prep.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          The list covers every major algorithmic pattern: arrays, binary search, dynamic programming, graphs, trees,
+          heaps, tries, and intervals — all in 75 carefully chosen problems. No padding.
+        </p>
+      </section>
+
+      <!-- What is Grind 75 -->
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">What Is Grind 75?</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Grind 75 is also by <strong style="color: var(--color-text-primary);">Yangshun Tay</strong> — the successor to Blind 75.
+          Where Blind 75 is a fixed list, Grind 75 is dynamic: go to <a href="https://grind75.com" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">grind75.com</a>,
+          enter how many weeks you have, and it generates a customized week-by-week plan ranging from 75 to 169 problems.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          It improves on Blind 75 with more recent problem selections, clearer difficulty progression,
+          and a study plan structure that's easier to follow consistently.
+        </p>
+      </section>
+
+      <!-- What is NeetCode 150 -->
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">What Is NeetCode 150?</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          NeetCode 150 was created by <strong style="color: var(--color-text-primary);">Rohan Vasishth</strong> (known online as
+          <a href="https://neetcode.io" class="text-brand-400 hover:text-brand-300 underline" target="_blank" rel="noopener noreferrer">NeetCode</a>),
+          a Google engineer who expanded the Blind 75 into a 150-problem list with a free video solution for every single problem.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          The extra 75 problems cover patterns that Blind 75 touches lightly — advanced graphs, intervals, greedy, math —
+          making it more complete for senior/L5+ roles. The video walkthroughs are the standout feature:
+          they explain the intuition, not just the code.
+        </p>
+      </section>
+
+      <!-- Comparison table -->
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Side-by-Side Comparison</h2>
+        <div class="overflow-x-auto rounded-xl border border-brand-500/20">
+          <table class="w-full text-sm" style="border-collapse: collapse;">
+            <thead>
+              <tr style="background: rgba(99,102,241,0.1); color: var(--color-text-primary);">
+                <th class="text-left p-3 font-semibold">Feature</th>
+                <th class="text-left p-3 font-semibold">Blind 75</th>
+                <th class="text-left p-3 font-semibold">Grind 75</th>
+                <th class="text-left p-3 font-semibold">NeetCode 150</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Problem Count', '75 (fixed)', '75–169 (dynamic)', '150 (fixed)'],
+                ['Has Video Solutions', '❌ None', '❌ None', '✅ All 150'],
+                ['Curated By', 'Yangshun Tay', 'Yangshun Tay', 'Rohan Vasishth (NeetCode)'],
+                ['Study Plan', '❌ No structure', '✅ Week-by-week', '✅ By topic section'],
+                ['Best For', 'Time-constrained', 'Structured learners', 'Visual/video learners'],
+                ['Est. Completion', '3–6 weeks', '4–8 weeks', '6–12 weeks'],
+              ].map(([feature, b75, g75, nc150], i) => (
+                <tr style={`background: ${i % 2 === 0 ? 'rgba(99,102,241,0.03)' : 'transparent'}; color: var(--color-text-secondary); border-top: 1px solid rgba(99,102,241,0.1);`}>
+                  <td class="p-3 font-medium" style="color: var(--color-text-primary);">{feature}</td>
+                  <td class="p-3">{b75}</td>
+                  <td class="p-3">{g75}</td>
+                  <td class="p-3">{nc150}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Which should you do -->
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">Which One Should You Do?</h2>
+        <div class="space-y-4">
+          {[
+            { cond: '⏰ Interview in 2–4 weeks', rec: 'Do Blind 75.', why: "It's the fastest path to covering every core pattern. 75 problems is achievable in a focused sprint." },
+            { cond: '📅 Have 4–8 weeks and want structure', rec: 'Do Grind 75.', why: "The week-by-week plan takes the decision fatigue out of ordering. The dynamic problem set is also more up-to-date." },
+            { cond: '🎥 You learn best from video', rec: 'Do NeetCode 150.', why: "Every problem has a free video explanation from NeetCode. If you get stuck, there's always a walkthrough available." },
+            { cond: '🏆 Serious about FAANG (2–3+ months)', rec: 'Do all three.', why: "The lists share ~40 problems, so you get significant overlap. Doing all three gives you 150–200 unique problems with full pattern coverage." },
+          ].map(({ cond, rec, why }) => (
+            <div class="rounded-xl p-4 flex gap-4" style="background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);">
+              <div class="flex-1">
+                <p class="text-sm font-semibold mb-1" style="color: var(--color-text-primary);">{cond} → <span class="text-brand-400">{rec}</span></p>
+                <p class="text-sm" style="color: var(--color-text-secondary);">{why}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="rounded-2xl p-6 text-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2);">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">Check Your Coverage Automatically</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          Stop guessing which problems you've done. Enter your username to
+          <a href="/" class="text-brand-400 hover:text-brand-300 underline">check your Blind 75, NeetCode 150, and Grind 75 coverage automatically</a>.
+        </p>
+        <a href="/" class="btn-brand">Check My Coverage →</a>
+      </section>
+
+      <!-- FAQ -->
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-blind75" />
+    </aside>
+  </div>
+</div>
+</Base>

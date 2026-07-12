@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Security-sensitive packages that process untrusted user input —
+    # the Solution Analyzer's AST parsers must stay current on patches.
+    # Dependabot PRs are gated by CI (typecheck + unit tests) before merge.
+    labels:
+      - "dependencies"
+      - "security"
+    open-pull-requests-limit: 10
+    groups:
+      ast-parsers:
+        # These process untrusted user-pasted code — highest priority for updates
+        patterns:
+          - "acorn"
+          - "@babel/parser"
+          - "@babel/traverse"
+          - "web-tree-sitter"
+          - "tree-sitter-*"
+      astro-core:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"

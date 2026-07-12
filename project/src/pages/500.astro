@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Something Went Wrong | LeetCodeAnalyzer"
+  description="LeetCodeAnalyzer encountered a temporary issue. We'll be back shortly."
+>
+  <div class="min-h-[70vh] flex items-center justify-center px-4">
+    <div class="text-center max-w-md">
+      <div class="text-7xl mb-4" role="img" aria-label="Construction sign">⚠️</div>
+      <h1 class="text-2xl font-bold mb-3" style="color: var(--color-text-primary);">Temporarily unavailable</h1>
+      <p class="text-sm mb-4 leading-relaxed" style="color: var(--color-text-secondary);">Something went wrong on our end. This is a temporary issue — we haven't lost any data and your code analysis never left your browser.</p>
+      <p class="text-xs mb-8" style="color: var(--color-text-muted);">If this keeps happening, please reach out at <a href="mailto:contact@leetcodeanalyzer.com" class="text-brand-400 hover:underline">contact@leetcodeanalyzer.com</a>.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/" class="btn-brand">← Back to homepage</a>
+        <a href="/analyze" class="btn-ghost">Solution Analyzer (works offline)</a>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,143 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const title = 'How to Know If You\'re Ready for Coding Interviews | LeetCodeAnalyzer';
+const description = 'Move beyond "I solved X problems." Concrete readiness signals that actually predict interview performance — coverage thresholds, patterns, and timing.';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Know If You\'re Ready for Coding Interviews',
+  description,
+  author: { '@type': 'Organization', name: 'LeetCodeAnalyzer' },
+  publisher: { '@type': 'Organization', name: 'LeetCodeAnalyzer', url: 'https://leetcodeanalyzer.com' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How many LeetCode problems should I solve before applying?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Pattern coverage matters more than count. 80%+ of Blind 75 with the ability to explain your complexity reasoning is a reasonable signal for most FAANG screens. More problems don\'t compensate for pattern gaps.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is 75 LeetCode problems enough for FAANG?',
+      acceptedAnswer: { '@type': 'Answer', text: 'For initial screens, often yes — if you understand the underlying patterns, not just memorized solutions. FAANG interviews test pattern recognition and problem-solving, not solution memorization.' },
+    },
+  ],
+};
+---
+
+<Base title={title} description={description} jsonLd={[articleSchema, faqSchema]}>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-xs" style="color: var(--color-text-muted);">
+        <li><a href="/" class="hover:text-brand-400 transition-colors">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/guides" class="hover:text-brand-400 transition-colors">Guides</a></li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium" style="color: var(--color-text-primary);">Interview Readiness</li>
+      </ol>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article class="lg:col-span-8 animate-fade-in" aria-label="Article: Ready for Interviews">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style="color: var(--color-text-primary);">
+        How to Know If You're Ready for Coding Interviews
+      </h1>
+      <p class="text-sm mb-10" style="color: var(--color-text-muted);">4 min read · LeetCodeAnalyzer</p>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">The Checklist Trap</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          The most common readiness metric is a problem count. "I've solved 200 problems, I must be ready." But problem count is a vanity metric.
+          You can solve 300 easy problems and still bomb a medium graph question in your screen.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          <strong style="color: var(--color-text-primary);">Doing problems ≠ being ready.</strong> Understanding patterns and being able to apply them under time pressure is what predicts success.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">What "Ready" Actually Looks Like</h2>
+        <div class="space-y-3">
+          {[
+            { signal: 'Solve mediums in 20–30 min without hints', why: 'Most FAANG screens are medium difficulty with a 30–45 min slot.' },
+            { signal: 'Explain complexity reasoning clearly', why: 'Interviewers evaluate your thinking, not just correctness.' },
+            { signal: 'Comfortable with 7–10 core patterns', why: 'Two pointers, sliding window, binary search, BFS/DFS, DP, heaps, tries, graphs, backtracking, intervals.' },
+            { signal: 'Can handle follow-up constraint changes', why: '"What if the array is sorted?" — real interviews push on your solution.' },
+            { signal: 'Practiced timed mock interviews', why: 'Solving at home without a clock is fundamentally different from solving with someone watching.' },
+          ].map(({ signal, why }) => (
+            <div class="flex gap-3 rounded-xl p-4" style="background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15);">
+              <span class="text-emerald-400 shrink-0 mt-0.5">✓</span>
+              <div>
+                <p class="text-sm font-semibold" style="color: var(--color-text-primary);">{signal}</p>
+                <p class="text-xs mt-0.5" style="color: var(--color-text-secondary);">{why}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Coverage as a Proxy</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Completing <strong style="color: var(--color-text-primary);">80%+ of Blind 75</strong> is a reasonable signal for most FAANG initial screens.
+          That's 60 of 75 problems — enough to have seen every major pattern at least once.
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          This is a <em>proxy</em>, not a guarantee. The question is whether you genuinely understand the problems or just memorized solutions.
+          Test yourself: close the solution and try to re-solve a problem you did last week.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-xl font-bold mb-3" style="color: var(--color-text-primary);">Topic Gap Analysis</h2>
+        <p class="text-base leading-relaxed mb-3" style="color: var(--color-text-secondary);">
+          Don't just count total problems solved — look at which <em>topics</em> have low coverage. A common failure mode:
+          strong on arrays and strings, weak on graphs and DP (the two hardest categories).
+        </p>
+        <p class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
+          Entering your username in the progress tracker shows your breakdown by tag, so you can identify and fix gaps before your screen.
+        </p>
+      </section>
+
+      <div class="rounded-2xl p-6 text-center" style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2);">
+        <h2 class="text-lg font-bold mb-2" style="color: var(--color-text-primary);">Check Your Real Coverage</h2>
+        <p class="text-sm mb-4" style="color: var(--color-text-secondary);">
+          See your exact Blind 75, NeetCode 150, and Grind 75 coverage from your actual solve history — not a checklist.
+        </p>
+        <a href="/" class="btn-brand">Check My Coverage →</a>
+      </div>
+
+      <section class="mt-12">
+        <h2 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">FAQ</h2>
+        <div class="space-y-3">
+          {faqSchema.mainEntity.map((q) => (
+            <details class="card overflow-hidden group">
+              <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold" style="color: var(--color-text-primary);">
+                {q.name}
+                <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">{q.acceptedAnswer.text}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </article>
+
+    <!-- Sidebar with AdSlot -->
+    <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+      <!-- TODO: Replace slotId with actual approved AdSense Slot ID. Placement: sidebar position on guide pages -->
+      <AdSlot slotId="guide-sidebar-interview-ready" />
+    </aside>
+  </div>
+</div>
+</Base>

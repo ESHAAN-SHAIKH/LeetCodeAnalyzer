@@ -1,0 +1,10 @@
+name = "leetcode-analyzer"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "LEETCODE_CACHE"
+id = "YOUR_KV_NAMESPACE_ID_HERE"
+preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID_HERE"
+
+[vars]
+ENVIRONMENT = "production"

@@ -1,0 +1,120 @@
+---
+interface Props {
+  easy: { solved: number; total: number };
+  medium: { solved: number; total: number };
+  hard: { solved: number; total: number };
+}
+
+const { easy, medium, hard } = Astro.props;
+
+function calcPct(solved: number, total: number): number {
+  if (total === 0) return 0;
+  return Math.min(100, Math.round((solved / total) * 100));
+}
+
+const easyPct = calcPct(easy.solved, easy.total);
+const medPct = calcPct(medium.solved, medium.total);
+const hardPct = calcPct(hard.solved, hard.total);
+
+const bars = [
+  {
+    label: 'Easy',
+    solved: easy.solved,
+    total: easy.total,
+    pct: easyPct,
+    barColor: '#10b981',
+    trackColor: 'rgba(16,185,129,0.12)',
+    textColor: '#34d399',
+    badgeClass: 'badge-easy',
+  },
+  {
+    label: 'Medium',
+    solved: medium.solved,
+    total: medium.total,
+    pct: medPct,
+    barColor: '#f59e0b',
+    trackColor: 'rgba(245,158,11,0.12)',
+    textColor: '#fbbf24',
+    badgeClass: 'badge-medium',
+  },
+  {
+    label: 'Hard',
+    solved: hard.solved,
+    total: hard.total,
+    pct: hardPct,
+    barColor: '#f43f5e',
+    trackColor: 'rgba(244,63,94,0.12)',
+    textColor: '#fb7185',
+    badgeClass: 'badge-hard',
+  },
+];
+---
+
+<div class="card p-6" aria-label="Difficulty breakdown">
+  <h3 class="text-base font-semibold mb-5" style="color: var(--color-text-primary);">Difficulty Breakdown</h3>
+
+  <div class="space-y-5">
+    {bars.map((bar, idx) => (
+      <div class="group">
+        <!-- Label row -->
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <span class={`badge ${bar.badgeClass}`}>{bar.label}</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="font-bold" style={`color: ${bar.textColor};`}>{bar.solved}</span>
+            <span style="color: var(--color-text-muted);">/ {bar.total}</span>
+            <span class="text-xs font-semibold ml-1 tabular-nums" style={`color: ${bar.textColor};`}>{bar.pct}%</span>
+          </div>
+        </div>
+
+        <!-- Progress bar track -->
+        <div
+          class="relative h-2.5 rounded-full overflow-hidden"
+          style={`background: ${bar.trackColor};`}
+          role="progressbar"
+          aria-valuenow={bar.pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${bar.label}: ${bar.solved} of ${bar.total} solved`}
+        >
+          <!-- Animated fill -->
+          <div
+            class="absolute inset-y-0 left-0 rounded-full difficulty-bar"
+            style={`
+              background: linear-gradient(90deg, ${bar.barColor}cc, ${bar.barColor});
+              width: ${bar.pct}%;
+              animation: barFill${idx} 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + idx * 0.15}s both;
+            `}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Totals summary -->
+  <div class="mt-5 pt-5 border-t border-brand-500/10 flex items-center justify-between">
+    <span class="text-xs" style="color: var(--color-text-muted);">Total solved</span>
+    <span class="text-sm font-bold" style="color: var(--color-text-primary);">
+      {easy.solved + medium.solved + hard.solved}
+      <span class="font-normal text-xs ml-1" style="color: var(--color-text-muted);">
+        / {easy.total + medium.total + hard.total}
+      </span>
+    </span>
+  </div>
+</div>
+
+<style>
+  @keyframes barFill0 {
+    from { width: 0%; }
+    to { width: var(--bar-width, 0%); }
+  }
+  @keyframes barFill1 {
+    from { width: 0%; }
+    to { width: var(--bar-width, 0%); }
+  }
+  @keyframes barFill2 {
+    from { width: 0%; }
+    to { width: var(--bar-width, 0%); }
+  }
+</style>

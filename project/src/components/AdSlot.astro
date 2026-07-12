@@ -1,0 +1,37 @@
+---
+interface Props {
+  slotId?: string;
+  adFormat?: string;
+  responsive?: boolean;
+  style?: string;
+  className?: string;
+}
+
+const {
+  slotId = "1234567890", // default placeholder slot ID
+  adFormat = "auto",
+  responsive = true,
+  style = "display:block",
+  className = "",
+} = Astro.props;
+---
+
+<div class={`ad-container my-6 rounded-2xl border border-brand-500/10 bg-surface-800/40 p-4 text-center backdrop-blur-sm ${className}`}>
+  <!-- TODO: Replace with your actual AdSense publisher ID (e.g. ca-pub-XXXXXXXXXXXXXXXX) and slot ID -->
+  <!-- data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" -->
+  <!-- data-ad-slot={slotId} -->
+  <div class="ad-placeholder flex flex-col items-center justify-center py-8 px-4 border border-dashed border-brand-500/20 rounded-xl bg-black/20">
+    <span class="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1">Sponsored Advertisement</span>
+    <span class="text-[10px] text-slate-600">AdSlot ID: {slotId}</span>
+    
+    <ins class="adsbygoogle"
+         style={style}
+         data-ad-client="ca-pub-placeholder"
+         data-ad-slot={slotId}
+         data-ad-format={adFormat}
+         data-full-width-responsive={String(responsive)}></ins>
+    <script is:inline>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</div>
