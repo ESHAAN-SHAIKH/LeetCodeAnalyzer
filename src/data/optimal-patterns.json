@@ -1,0 +1,254 @@
+{
+  "two-sum": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Hash Map",
+    "explanation": "Use a hash map to store each number and its index. For each element, check if its complement (target - num) exists in the map in O(1). Brute force is O(n²)."
+  },
+  "best-time-to-buy-and-sell-stock": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Sliding Window / Greedy",
+    "explanation": "Track the minimum price seen so far and the maximum profit. One pass is sufficient. No stack or DP needed."
+  },
+  "contains-duplicate": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Hash Set",
+    "explanation": "Add elements to a set and check for duplicates in O(1) per element. Sorting gives O(n log n) — the hash-set approach is strictly better."
+  },
+  "valid-anagram": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Frequency Counter",
+    "explanation": "Count character frequencies with a fixed-size array of 26 integers (constant space for lowercase English). Sorting is O(n log n) and unnecessary."
+  },
+  "group-anagrams": {
+    "optimalComplexity": "O(n * k)",
+    "optimalSpace": "O(n * k)",
+    "technique": "Hash Map with Sorted/Counted Key",
+    "explanation": "Use a hash map keyed by sorted string (or character frequency tuple). O(n * k) where k is max string length. Sorting every string individually without grouping is the brute-force trap."
+  },
+  "top-k-frequent-elements": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Bucket Sort",
+    "explanation": "Count frequencies, then use bucket sort indexed by frequency (max n buckets). Heap approach gives O(n log k) — bucket sort achieves true O(n)."
+  },
+  "product-of-array-except-self": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Prefix × Suffix Product",
+    "explanation": "Compute prefix products left-to-right, then multiply by suffix products right-to-left in the same output array. No division, O(1) extra space (excluding output)."
+  },
+  "maximum-subarray": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Kadane's Algorithm",
+    "explanation": "At each position, the max subarray ending here is max(nums[i], currentMax + nums[i]). One pass, constant space — Kadane's is O(n); divide-and-conquer is O(n log n)."
+  },
+  "longest-substring-without-repeating-characters": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(min(m,n))",
+    "technique": "Sliding Window",
+    "explanation": "Maintain a window with a set or map of characters. Expand right, shrink left when duplicate found. Each character is visited at most twice — O(n)."
+  },
+  "longest-repeating-character-replacement": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Sliding Window",
+    "explanation": "Track the count of the most frequent character in the window. If window_size - maxCount > k, shrink from left. O(26) = O(1) space for the frequency map."
+  },
+  "minimum-window-substring": {
+    "optimalComplexity": "O(n + m)",
+    "optimalSpace": "O(n + m)",
+    "technique": "Sliding Window with Frequency Map",
+    "explanation": "Two-pointer sliding window with a character frequency map. Shrink from left when all required characters are satisfied. O(n + m) where n and m are string lengths."
+  },
+  "valid-parentheses": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Stack",
+    "explanation": "Push open brackets onto a stack. For each closing bracket, check if the top of the stack is the matching open bracket. O(n) time and space."
+  },
+  "trapping-rain-water": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Two Pointers",
+    "explanation": "Use two pointers from each end. The shorter side determines water level at that position. Move the shorter pointer inward. O(1) space vs O(n) for the prefix-max-array approach."
+  },
+  "number-of-1-bits": {
+    "optimalComplexity": "O(k)",
+    "optimalSpace": "O(1)",
+    "technique": "Bit Manipulation (n & n-1)",
+    "explanation": "n & (n-1) clears the lowest set bit. Count how many times you can do this until n = 0. O(k) where k is the number of 1-bits — faster than checking all 32 bits."
+  },
+  "counting-bits": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Dynamic Programming with bit trick",
+    "explanation": "dp[i] = dp[i >> 1] + (i & 1). Shift right halves the number, which we've already computed. One pass, O(1) per element."
+  },
+  "climbing-stairs": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Dynamic Programming (Fibonacci variant)",
+    "explanation": "Only need the previous two values. Reduce O(n) space to O(1) by keeping two variables instead of the full DP array."
+  },
+  "coin-change": {
+    "optimalComplexity": "O(n * amount)",
+    "optimalSpace": "O(amount)",
+    "technique": "Bottom-up Dynamic Programming",
+    "explanation": "Build a 1D DP table from 0 to amount. dp[i] = min(dp[i - coin] + 1) for each coin. Top-down memoization is equivalent but bottom-up avoids recursion overhead."
+  },
+  "house-robber": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Dynamic Programming (two variables)",
+    "explanation": "Rob or skip. At each house, max_so_far = max(prev, prev_prev + nums[i]). Only two variables needed — O(1) space vs O(n) DP array."
+  },
+  "longest-increasing-subsequence": {
+    "optimalComplexity": "O(n log n)",
+    "optimalSpace": "O(n)",
+    "technique": "Patience Sorting / Binary Search",
+    "explanation": "Maintain a 'tails' array. For each number, binary search for the first tail >= nums[i] and replace it (or append). O(n log n) vs the classic O(n²) DP."
+  },
+  "longest-common-subsequence": {
+    "optimalComplexity": "O(m * n)",
+    "optimalSpace": "O(min(m,n))",
+    "technique": "Bottom-up 2D DP with space optimization",
+    "explanation": "Classic 2D DP is O(m * n) space. Since each row only depends on the previous row, you can use two 1D arrays (or even one with a temp variable)."
+  },
+  "unique-paths": {
+    "optimalComplexity": "O(m * n)",
+    "optimalSpace": "O(n)",
+    "technique": "DP with 1D rolling array",
+    "explanation": "Each cell dp[i][j] = dp[i-1][j] + dp[i][j-1]. Only need the current and previous row — optimize to O(n) space. Mathematical combinatorics gives O(m+n) time O(1) space but DP is the intended pattern."
+  },
+  "word-break": {
+    "optimalComplexity": "O(n² * m)",
+    "optimalSpace": "O(n)",
+    "technique": "Bottom-up DP",
+    "explanation": "dp[i] = True if s[j:i] is in wordDict for some j < i where dp[j] is True. O(n²) positions * O(m) for dictionary lookup. Backtracking without memoization is exponential."
+  },
+  "reverse-linked-list": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Iterative with three pointers",
+    "explanation": "Prev, curr, next. Iterative is O(1) space vs recursive O(n) call stack. Both are O(n) time."
+  },
+  "merge-two-sorted-lists": {
+    "optimalComplexity": "O(n + m)",
+    "optimalSpace": "O(1)",
+    "technique": "Iterative merge with dummy head",
+    "explanation": "Use a dummy node and move through both lists, appending the smaller element. O(1) extra space iteratively vs O(n + m) recursive call stack."
+  },
+  "merge-k-sorted-lists": {
+    "optimalComplexity": "O(n log k)",
+    "optimalSpace": "O(k)",
+    "technique": "Min-Heap",
+    "explanation": "Push the head of each list into a min-heap. Pop the minimum, advance that list's pointer, push next. O(n log k) where n is total nodes and k is number of lists. Naive merge is O(nk)."
+  },
+  "binary-tree-level-order-traversal": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "BFS with queue",
+    "explanation": "BFS naturally gives level-order. Track level size before each BFS wave. O(n) time and O(n) space for the queue (max width at any level)."
+  },
+  "validate-binary-search-tree": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(h)",
+    "technique": "DFS with valid range [min, max]",
+    "explanation": "Pass a valid range (min, max) through each recursive call. A node is valid only if it falls strictly within its range. O(h) space for recursion stack where h is tree height."
+  },
+  "invert-binary-tree": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(h)",
+    "technique": "DFS (recursive or iterative)",
+    "explanation": "Swap left and right children at every node. O(n) time visiting all nodes, O(h) space for the call stack where h is height (O(log n) balanced, O(n) worst case)."
+  },
+  "binary-tree-maximum-path-sum": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(h)",
+    "technique": "DFS returning max path through subtree",
+    "explanation": "For each node, compute the max path contribution from left/right subtrees (clamped at 0). Update a global max. O(n) — every node visited once."
+  },
+  "number-of-islands": {
+    "optimalComplexity": "O(m * n)",
+    "optimalSpace": "O(m * n)",
+    "technique": "DFS or BFS flood fill",
+    "explanation": "For each unvisited '1', DFS/BFS and mark all connected land as visited. O(m * n) time and space. Union-Find is also O(m * n α(m*n)) ≈ O(m * n)."
+  },
+  "course-schedule": {
+    "optimalComplexity": "O(V + E)",
+    "optimalSpace": "O(V + E)",
+    "technique": "Topological Sort (DFS cycle detection)",
+    "explanation": "Build adjacency list, then DFS with 3-color marking (unvisited/visiting/visited). If you encounter a gray (visiting) node, there's a cycle. O(V + E) for graph traversal."
+  },
+  "implement-trie-prefix-tree": {
+    "optimalComplexity": "O(m) per operation",
+    "optimalSpace": "O(m * n)",
+    "technique": "Trie with TrieNode array",
+    "explanation": "Each TrieNode stores children[26] for lowercase letters and a boolean isEnd. O(m) per insert/search/startsWith where m is word length."
+  },
+  "find-median-from-data-stream": {
+    "optimalComplexity": "O(log n) insert, O(1) findMedian",
+    "optimalSpace": "O(n)",
+    "technique": "Two Heaps (max-heap + min-heap)",
+    "explanation": "Maintain a max-heap of the lower half and a min-heap of the upper half, balanced within 1 element. Median is top of max-heap (or average of both tops)."
+  },
+  "insert-interval": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(n)",
+    "technique": "Linear scan with overlap merge",
+    "explanation": "Separate non-overlapping intervals before/after the new one. Merge all overlapping intervals in one pass. O(n) — no sorting needed since input is already sorted."
+  },
+  "merge-intervals": {
+    "optimalComplexity": "O(n log n)",
+    "optimalSpace": "O(n)",
+    "technique": "Sort then linear merge",
+    "explanation": "Sort by start time. Merge current interval into result if it overlaps with the last merged interval. The O(n log n) sort dominates."
+  },
+  "search-in-rotated-sorted-array": {
+    "optimalComplexity": "O(log n)",
+    "optimalSpace": "O(1)",
+    "technique": "Modified Binary Search",
+    "explanation": "At each midpoint, determine which half is sorted. Narrow down which half the target belongs to. O(log n) — linear scan is O(n) and defeats the purpose."
+  },
+  "container-with-most-water": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Two Pointers",
+    "explanation": "Start with pointers at both ends. Move the shorter bar inward (since that's the only way to possibly find a taller bar). O(n) vs O(n²) for brute force."
+  },
+  "3sum": {
+    "optimalComplexity": "O(n²)",
+    "optimalSpace": "O(n)",
+    "technique": "Sort + Two Pointers",
+    "explanation": "Sort the array. Fix one element, then use two-pointer on the rest. Skip duplicates to avoid duplicate triplets. O(n²) — the O(n³) brute force is the common mistake."
+  },
+  "jump-game": {
+    "optimalComplexity": "O(n)",
+    "optimalSpace": "O(1)",
+    "technique": "Greedy (track max reach)",
+    "explanation": "Track the furthest reachable index. If you reach an index beyond the current max reach, it's unreachable. O(n) — DP with memoization is also O(n) but O(n) space."
+  },
+  "clone-graph": {
+    "optimalComplexity": "O(V + E)",
+    "optimalSpace": "O(V)",
+    "technique": "BFS/DFS with visited map",
+    "explanation": "Use a hash map from original node to its clone. BFS/DFS and clone as you traverse. O(V + E) time and O(V) space for the map."
+  },
+  "pacific-atlantic-water-flow": {
+    "optimalComplexity": "O(m * n)",
+    "optimalSpace": "O(m * n)",
+    "technique": "Reverse BFS from both oceans",
+    "explanation": "BFS inward from Pacific borders and Atlantic borders separately. Cells reachable from both are the answer. Reverse direction avoids checking all paths from each cell."
+  },
+  "alien-dictionary": {
+    "optimalComplexity": "O(C)",
+    "optimalSpace": "O(1)",
+    "technique": "Topological Sort (BFS Kahn's)",
+    "explanation": "Build a character dependency graph from adjacent word pairs. Kahn's algorithm detects cycles (invalid input) and produces a valid ordering. O(C) where C is total characters across all words."
+  }
+}

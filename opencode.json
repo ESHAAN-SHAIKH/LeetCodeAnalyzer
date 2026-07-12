@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "nvidia-nim": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "NVIDIA NIM",
+      "options": {
+        "baseURL": "https://integrate.api.nvidia.com/v1",
+        "apiKey": "{env:NVIDIA_API_KEY}",
+        
+        "timeout": 600000
+      },
+      "models": {
+        "z-ai/glm-5.2": {
+          "name": "GLM-5.2 NVIDIA NIM",
+          "limit": {
+            "context": 1000000,
+            "output": 131072
+          }
+        }
+      }
+    }
+  },
+  "model": "nvidia-nim/z-ai/glm-5.2",
+  "small_model": "nvidia-nim/z-ai/glm-5.2"
+}

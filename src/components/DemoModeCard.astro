@@ -1,0 +1,108 @@
+---
+import DifficultyBreakdown from './DifficultyBreakdown.astro';
+import CoverageCard from './CoverageCard.astro';
+import blind75Data from '../data/lists/blind75.json';
+import neetcode150Data from '../data/lists/neetcode150.json';
+import grind75Data from '../data/lists/grind75.json';
+
+// Fictional demo data — clearly labeled
+const demoUser = 'demo_user';
+
+type ListProblem = {
+  slug: string;
+  title: string;
+  difficulty: string;
+  tags?: string[];
+};
+
+function toRemaining(listData: ListProblem[], solvedCount: number) {
+  return listData.slice(solvedCount).map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    difficulty: p.difficulty,
+    tags: p.tags ?? [],
+  }));
+}
+
+const blind75Remaining = toRemaining(blind75Data as ListProblem[], 31);
+const neetRemaining = toRemaining(neetcode150Data as ListProblem[], 48);
+const grindRemaining = toRemaining(grind75Data as ListProblem[], 27);
+
+// Difficulty totals: unique problems across all three prep lists (deduped by slug)
+const uniqueBySlug = new Map<string, ListProblem>();
+for (const p of [...blind75Data, ...neetcode150Data, ...grind75Data] as ListProblem[]) {
+  uniqueBySlug.set(p.slug, p);
+}
+const difficultyTotals = { Easy: 0, Medium: 0, Hard: 0 };
+for (const p of uniqueBySlug.values()) {
+  if (p.difficulty in difficultyTotals) {
+    difficultyTotals[p.difficulty as keyof typeof difficultyTotals]++;
+  }
+}
+
+const easy = { solved: 58, total: difficultyTotals.Easy };
+const medium = { solved: 47, total: difficultyTotals.Medium };
+const hard = { solved: 5, total: difficultyTotals.Hard };
+---
+
+<div class="relative rounded-xl overflow-hidden border border-surface-600 bg-surface-800/40">
+  <!-- Demo Banner -->
+  <div class="flex items-center justify-center gap-3 px-4 py-3 border-b border-surface-600 bg-surface-900/60 font-sans">
+    <span class="badge" style="background: rgba(217, 164, 65, 0.15); color: var(--color-signal); letter-spacing: 0.1em; font-family: var(--font-mono);">DEMO</span>
+    <p class="text-sm font-medium" style="color: var(--color-text-secondary);">
+      Fictional data — enter your username above to see your real stats
+    </p>
+  </div>
+
+  <div class="p-6 md:p-8 space-y-6">
+    <!-- Demo user header -->
+    <div class="flex items-center gap-3 font-sans">
+      <div class="h-10 w-10 rounded border border-signal/20 bg-signal/10 flex items-center justify-center text-sm font-bold text-signal font-mono">D</div>
+      <div>
+        <p class="font-semibold" style="color: var(--color-text-primary);">@{demoUser}</p>
+        <p class="text-xs" style="color: var(--color-text-muted);">Fictional demo account</p>
+      </div>
+    </div>
+
+    <!-- Difficulty breakdown demo -->
+    <DifficultyBreakdown easy={easy} medium={medium} hard={hard} />
+
+    <!-- Coverage cards demo -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <CoverageCard
+        listName="blind75"
+        totalProblems={75}
+        solvedCount={31}
+        solvedSlugs={[]}
+        remainingProblems={blind75Remaining}
+        author="Yangshun Tay"
+        authorUrl="https://github.com/yangshun"
+      />
+      <CoverageCard
+        listName="neetcode150"
+        totalProblems={150}
+        solvedCount={48}
+        solvedSlugs={[]}
+        remainingProblems={neetRemaining}
+        author="NeetCode"
+        authorUrl="https://neetcode.io"
+      />
+      <CoverageCard
+        listName="grind75"
+        totalProblems={75}
+        solvedCount={27}
+        solvedSlugs={[]}
+        remainingProblems={grindRemaining}
+        author="Yangshun Tay"
+        authorUrl="https://grind75.com"
+      />
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center pt-2 font-sans">
+      <p class="text-sm font-medium" style="color: var(--color-text-muted);">
+        ↑ Enter your LeetCode username above to see <strong style="color: var(--color-text-primary);">your actual coverage</strong>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+
+      # This project runs on Cloudflare Workers (via the @astrojs/cloudflare
+      # adapter + wrangler.toml), not Cloudflare Pages — cloudflare/pages-action
+      # is the wrong product here and was left over from an earlier plan.
+      # wrangler-action deploys with `wrangler deploy`, which picks up the
+      # generated dist/server/wrangler.json (main entry + assets directory)
+      # merged with the KV bindings declared in the root wrangler.toml.
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config dist/server/wrangler.json

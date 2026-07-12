@@ -1,0 +1,238 @@
+---
+import Base from '../layouts/Base.astro';
+import ProfileSearch from '../components/ProfileSearch.astro';
+import DemoModeCard from '../components/DemoModeCard.astro';
+
+const title = 'LeetCodeAnalyzer — Free Blind 75, NeetCode & Grind 75 Progress Tracker';
+const description = 'Check your real LeetCode coverage across Blind 75, NeetCode 150, and Grind 75 — auto-computed from your actual solves, not a checklist.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'LeetCodeAnalyzer',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any (web-based)',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How does LeetCodeAnalyzer compute my Blind 75 coverage?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "It cross-references the slugs of your accepted submissions (fetched from LeetCode's public GraphQL API) against the 75 problem slugs in the Blind 75 list. No manual checklist — it uses your actual solve history.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does my code leave my browser?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. The Solution Analyzer runs entirely client-side. Your pasted code is never sent to any server, API, or third party. All parsing and analysis happens in your browser using bundled JavaScript.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need a LeetCode account?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No account needed for Tier 1 (progress tracker) or the Solution Analyzer. Just enter your public LeetCode username to see your coverage stats.',
+      },
+    },
+  ],
+};
+
+const guides = [
+  { href: '/guides/blind75-vs-neetcode150-vs-grind75', title: 'Blind 75 vs NeetCode 150 vs Grind 75', desc: 'Which list should you tackle first?' },
+  { href: '/guides/how-to-know-if-ready-for-coding-interviews', title: 'Am I Ready for Coding Interviews?', desc: 'Concrete signals, not just problem counts.' },
+  { href: '/guides/how-to-identify-leetcode-weak-topics', title: 'Identify Your LeetCode Weak Topics', desc: 'Fix gaps before your next interview.' },
+  { href: '/guides/how-many-leetcode-problems-should-i-solve', title: 'How Many Problems Should You Solve?', desc: 'Quality vs. quantity — the real answer.' },
+  { href: '/guides/how-to-calculate-time-complexity', title: 'How to Calculate Time Complexity', desc: 'Big-O explained clearly with patterns.' },
+  { href: '/guides/what-makes-a-leetcode-solution-optimal', title: 'What Makes a Solution Optimal?', desc: 'Beyond just asymptotic complexity.' },
+];
+
+const features = [
+  {
+    icon: '📊',
+    title: 'Real Coverage Tracking',
+    desc: 'Cross-reference your actual solve history against Blind 75, NeetCode 150, and Grind 75 — no manual checking, just your truth.',
+  },
+  {
+    icon: '🔒',
+    title: 'Your Code Never Leaves',
+    desc: 'The Solution Analyzer runs 100% in your browser. We never see your code, your solutions, or your cookies.',
+  },
+  {
+    icon: '⚡',
+    title: 'Instant Results',
+    desc: 'Results are served from Cloudflare edge cache globally. No logins, no sign-ups, no friction.',
+  },
+];
+---
+
+<Base title={title} description={description} jsonLd={[appSchema, faqSchema]}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden py-16 md:py-24" aria-labelledby="hero-heading">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10 font-sans">
+      <p class="section-label mb-4 animate-fade-in text-signal">Free · No Login · Privacy-First</p>
+      <h1
+        id="hero-heading"
+        class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight animate-slide-up font-display text-ink_text"
+      >
+        Check Your Real<br />
+        <span class="text-signal">LeetCode Progress</span>
+      </h1>
+      <p class="mt-6 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto animate-fade-in text-ink_text-secondary">
+        Auto-compute your Blind 75, NeetCode 150, and Grind 75 coverage from your actual solves.
+        No spreadsheet. No checklist. Just your real numbers.
+      </p>
+
+      <!-- SVG Big-O curves drawing dynamically -->
+      <div class="w-full max-w-2xl mx-auto my-8 relative" aria-hidden="true">
+        <svg viewBox="0 0 600 320" class="w-full h-auto overflow-visible">
+          <!-- Grid Lines -->
+          <line x1="50" y1="270" x2="550" y2="270" stroke="var(--color-border)" stroke-width="1.5" />
+          <line x1="50" y1="50" x2="50" y2="270" stroke="var(--color-border)" stroke-width="1.5" />
+
+          <!-- Axis Arrow Heads -->
+          <path d="M 550 267 L 556 270 L 550 273 Z" fill="var(--color-text-muted)" />
+          <path d="M 47 50 L 50 44 L 53 50 Z" fill="var(--color-text-muted)" />
+
+          <!-- Labels -->
+          <text x="550" y="292" class="text-[10px] font-mono fill-ink_text-muted" text-anchor="end">N (Inputs)</text>
+          <text x="35" y="65" class="text-[10px] font-mono fill-ink_text-muted" transform="rotate(-90 35 65)" text-anchor="end">Operations</text>
+
+          <!-- Big O Curves -->
+          <!-- O(1) Constant (Optimal) -->
+          <path d="M 50 240 L 530 240" stroke="var(--color-optimal)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw-curve" fill="none" opacity="0.8" />
+          <text x="535" y="243" class="text-[10px] font-mono fill-optimal font-bold">O(1)</text>
+
+          <!-- O(log N) Logarithmic (Optimal-ish) -->
+          <path d="M 50 270 Q 150 160 530 150" stroke="var(--color-optimal)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw-curve" fill="none" opacity="0.9" />
+          <text x="535" y="153" class="text-[10px] font-mono fill-optimal font-bold">O(log n)</text>
+
+          <!-- O(N) Linear (Good) -->
+          <path d="M 50 270 L 450 70" stroke="var(--color-optimal)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw-curve" fill="none" />
+          <text x="455" y="67" class="text-[10px] font-mono fill-optimal font-bold">O(n)</text>
+
+          <!-- O(N log N) Linearithmic (Signal) -->
+          <path d="M 50 270 Q 220 220 300 70" stroke="var(--color-signal)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw-curve" fill="none" />
+          <text x="305" y="67" class="text-[10px] font-mono fill-signal font-bold">O(n log n)</text>
+
+          <!-- O(N^2) Quadratic (Danger) -->
+          <path d="M 50 270 Q 110 240 170 70" stroke="var(--color-danger)" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" class="animate-draw-curve" fill="none" />
+          <text x="175" y="67" class="text-[10px] font-mono fill-danger font-bold">O(n²)</text>
+        </svg>
+      </div>
+
+      <!-- Tier explainer pills -->
+      <div class="flex flex-wrap justify-center gap-2 mt-6 text-xs">
+        {[
+          { label: 'Tier 1', desc: 'Public username — instant coverage stats' },
+          { label: 'Tier 1.5', desc: 'Paste solution — browser-only complexity check' },
+          { label: 'Tier 2', desc: 'Session cookie — pattern analysis (optional)' },
+        ].map(({ label, desc }) => (
+          <span
+            class="flex items-center gap-1.5 rounded-full border border-surface-600 px-3 py-1.5 bg-surface-800/40 text-ink_text-secondary"
+          >
+            <span class="font-semibold text-signal font-mono">{label}:</span> {desc}
+          </span>
+        ))}
+      </div>
+
+      <!-- Search form -->
+      <div class="mt-10">
+        <ProfileSearch />
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo section -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16" aria-label="Demo output">
+    <div class="text-center mb-8 font-sans">
+      <p class="section-label mb-2">See it in action</p>
+      <h2 class="text-2xl font-bold font-display" style="color: var(--color-text-primary);">What your results look like</h2>
+      <p class="text-sm mt-2" style="color: var(--color-text-muted);">Fictional data below — yours will reflect your real solve history</p>
+    </div>
+    <DemoModeCard />
+  </section>
+
+  <!-- Features grid -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-surface-700" aria-labelledby="features-heading">
+    <div class="text-center mb-12 font-sans">
+      <p class="section-label mb-2">Why LeetCodeAnalyzer</p>
+      <h2 id="features-heading" class="text-2xl font-bold font-display" style="color: var(--color-text-primary);">Built with your privacy in mind</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+      {features.map((f) => (
+        <div class="card p-6 text-center space-y-3">
+          <div class="text-4xl" aria-hidden="true">{f.icon}</div>
+          <h3 class="text-base font-semibold" style="color: var(--color-text-primary);">{f.title}</h3>
+          <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Also analyze a solution -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-surface-700" aria-labelledby="analyze-cta-heading">
+    <div class="card p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 bg-surface-800/40 border border-surface-600 font-sans">
+      <div>
+        <p class="section-label mb-2">Solution Analyzer</p>
+        <h2 id="analyze-cta-heading" class="text-2xl font-bold font-display" style="color: var(--color-text-primary);">Also analyze any solution</h2>
+        <p class="text-sm mt-2 max-w-md" style="color: var(--color-text-secondary);">
+          Paste any accepted solution to get time/space complexity, better approaches, and similar problems.
+          Runs 100% in your browser — your code never leaves.
+        </p>
+      </div>
+      <a href="/analyze" class="btn-brand px-8 py-4 text-base rounded-xl shrink-0 font-sans">
+        Try Solution Analyzer →
+      </a>
+    </div>
+  </section>
+
+  <!-- Guides section -->
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 border-t border-surface-700" aria-labelledby="guides-heading">
+    <div class="text-center mb-10 font-sans">
+      <p class="section-label mb-2">Learn</p>
+      <h2 id="guides-heading" class="text-2xl font-bold font-display" style="color: var(--color-text-primary);">LeetCode Interview Prep Guides</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
+      {guides.map((g) => (
+        <a href={g.href} class="card p-5 group transition-all hover:-translate-y-0.5">
+          <h3 class="text-sm font-semibold mb-1.5 group-hover:text-signal transition-colors" style="color: var(--color-text-primary);">{g.title}</h3>
+          <p class="text-xs leading-relaxed" style="color: var(--color-text-muted);">{g.desc}</p>
+        </a>
+      ))}
+    </div>
+    <div class="text-center mt-6">
+      <a href="/guides" class="btn-ghost font-sans">View all guides →</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 border-t border-surface-700" aria-labelledby="faq-heading">
+    <div class="text-center mb-10 font-sans">
+      <h2 id="faq-heading" class="text-2xl font-bold font-display" style="color: var(--color-text-primary);">Frequently Asked Questions</h2>
+    </div>
+    <div class="space-y-4 font-sans">
+      {faqSchema.mainEntity.map((q) => (
+        <details class="card overflow-hidden group">
+          <summary class="flex items-center justify-between cursor-pointer select-none list-none px-5 py-4 text-sm font-semibold transition-colors hover:bg-signal/5" style="color: var(--color-text-primary);">
+            {q.name}
+            <svg class="h-4 w-4 shrink-0 ml-3 transition-transform group-open:rotate-180" style="color: var(--color-text-muted);" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          <div class="px-5 pb-4 text-sm leading-relaxed" style="color: var(--color-text-secondary);">
+            {q.acceptedAnswer.text}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+</Base>

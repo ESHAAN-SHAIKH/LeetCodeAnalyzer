@@ -1,0 +1,14 @@
+name = "leetcode-analyzer"
+compatibility_date = "2025-01-01"
+
+
+[[kv_namespaces]]
+binding = "LEETCODE_CACHE"
+id = "5dc784112ef849cca7dd382f4088bd0a"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "121e5c461050457e81305adb2a57859c"
+
+[vars]
+ENVIRONMENT = "production"

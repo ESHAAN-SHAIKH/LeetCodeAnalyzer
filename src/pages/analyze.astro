@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import SolutionAnalyzer from '../components/SolutionAnalyzer';
+
+const title = 'Free LeetCode Complexity Checker — Runs 100% in Your Browser | LeetCodeAnalyzer';
+const description = 'Paste your solution to get time/space complexity, better approaches, and similar problems. Your code never leaves your browser — no login, no API calls.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'LeetCode Solution Analyzer',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any (web-based)',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  description,
+};
+---
+
+<Base title={title} description={description} jsonLd={appSchema}>
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+
+    <!-- Hero -->
+    <div class="text-center mb-12 font-sans">
+      <p class="section-label mb-3 text-signal">100% Browser-Side · No Login · No API</p>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight font-display text-ink_text">
+        Free LeetCode<br />
+        <span class="text-signal">Complexity Checker</span>
+      </h1>
+      <p class="mt-4 text-lg max-w-2xl mx-auto leading-relaxed text-ink_text-secondary">
+        Paste your accepted solution to get time/space complexity, better approaches, and similar problems.
+        <strong class="text-ink_text">Your code never leaves your browser.</strong>
+      </p>
+    </div>
+
+    <!-- React Solution Analyzer Island -->
+    <div class="mb-12">
+      <SolutionAnalyzer client:load />
+    </div>
+
+    <!-- How this works -->
+    <section class="space-y-8 font-sans" aria-labelledby="how-it-works">
+      <div>
+        <h2 id="how-it-works" class="text-xl font-bold mb-4 font-display" style="color: var(--color-text-primary);">How This Works</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            { icon: '🔤', title: 'Language detection', desc: 'Detects Python, JavaScript, TypeScript, Java, and C++ from syntax patterns.' },
+            { icon: '🌳', title: 'AST-inspired parsing', desc: 'Identifies loop nesting, recursion depth, and data structure usage without executing your code.' },
+            { icon: '📐', title: 'Complexity estimation', desc: 'Heuristically matches recognized parsing patterns to known Big-O classes.' },
+            { icon: '🔗', title: 'Pattern matching', desc: 'Cross-references your approach against common interview patterns like sliding window, two pointers, DP, and more.' },
+          ].map(({ icon, title, desc }) => (
+            <div class="card p-4 flex gap-3">
+              <span class="text-2xl shrink-0" aria-hidden="true">{icon}</span>
+              <div>
+                <p class="text-sm font-semibold mb-1" style="color: var(--color-text-primary);">{title}</p>
+                <p class="text-xs leading-relaxed" style="color: var(--color-text-secondary);">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Complexity caveat -->
+      <div class="rounded-xl p-6 border border-signal/40 bg-surface-900">
+        <h2 class="text-base font-semibold mb-3 flex items-center gap-2 text-signal font-display">
+          <span aria-hidden="true">⚠️</span> What the complexity estimate means
+        </h2>
+        <p class="text-sm leading-relaxed mb-2 text-ink_text-secondary">
+          Big-O notation is a model, not a guarantee. This tool uses heuristic analysis — it identifies patterns like
+          nested loops and recursive calls, but cannot always infer the exact mathematical bound.
+        </p>
+        <p class="text-sm leading-relaxed text-ink_text-secondary">
+          <strong class="text-ink_text">Constants matter in practice.</strong> An O(n) algorithm with
+          a large constant factor can be slower than O(n log n) for typical input sizes. Use this as a starting point,
+          not a final verdict.
+        </p>
+      </div>
+
+      <!-- Guide CTA -->
+      <div class="text-center">
+        <p class="text-sm mb-3" style="color: var(--color-text-muted);">Want to calculate complexity yourself?</p>
+        <a href="/guides/how-to-calculate-time-complexity" class="btn-ghost">
+          Learn to calculate time complexity yourself →
+        </a>
+      </div>
+    </section>
+  </div>
+</Base>
