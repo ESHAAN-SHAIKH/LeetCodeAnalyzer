@@ -22,9 +22,6 @@ query getUserData($username: String!) {
   recentAcSubmissionList(username: $username, limit: 20) {
     id title titleSlug
   }
-  userCalendar(username: $username, year: 2025) {
-    activeYears streak totalActiveDays submissionCalendar
-  }
 }
 `;
 
@@ -158,8 +155,7 @@ export const GET: APIRoute = async (context) => {
         { id: "3", title: "Valid Anagram", titleSlug: "valid-anagram" },
         { id: "4", title: "Valid Parentheses", titleSlug: "valid-parentheses" },
         { id: "5", title: "Best Time to Buy and Sell Stock", titleSlug: "best-time-to-buy-and-sell-stock" }
-      ],
-      userCalendar: { activeYears: [2025], streak: 12, totalActiveDays: 45, submissionCalendar: '{"1735689600": 3, "1735776000": 5}' }
+      ]
     };
     return new Response(JSON.stringify(mockData), {
       headers: {
@@ -214,6 +210,9 @@ export const GET: APIRoute = async (context) => {
   console.log(`[profile] LeetCode responded: status=${leetcodeResponse.status} elapsed=${elapsed}ms`);
 
   if (!leetcodeResponse.ok) {
+    let errBody = '';
+    try { errBody = (await leetcodeResponse.text()).slice(0, 300); } catch { /* best-effort diagnostic */ }
+    console.log(`[profile] LeetCode non-OK body: ${errBody}`);
     return new Response(
       JSON.stringify({ error: 'leetcode_unavailable' }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
@@ -244,7 +243,6 @@ export const GET: APIRoute = async (context) => {
     matchedUser: data.matchedUser,
     userContestRanking: data.userContestRanking ?? null,
     recentAcSubmissionList: data.recentAcSubmissionList ?? [],
-    userCalendar: data.userCalendar ?? null,
   };
 
   const responseJson = JSON.stringify(responseData);
