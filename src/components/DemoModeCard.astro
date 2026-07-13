@@ -8,6 +8,15 @@ import grind75Data from '../data/lists/grind75.json';
 // Fictional demo data — clearly labeled
 const demoUser = 'demo_user';
 
+// Sanity check: in dev/test, refuse to render demo/fixture data where any
+// difficulty band would have solved > total. Fails loudly instead of letting
+// the calcPct() builder silently clamp to 100% and hide an invalid ratio.
+function assertSolvedNotExceedTotal(label: string, rows: { solved: number; total: number }[]) {
+  if (rows.some((r) => r.solved > r.total)) {
+    throw new Error(`[DifficultyBreakdown] Invalid ${label} demo/fixture data: solved exceeds total in one or more bands.`);
+  }
+}
+
 type ListProblem = {
   slug: string;
   title: string;
@@ -28,21 +37,12 @@ const blind75Remaining = toRemaining(blind75Data as ListProblem[], 31);
 const neetRemaining = toRemaining(neetcode150Data as ListProblem[], 48);
 const grindRemaining = toRemaining(grind75Data as ListProblem[], 27);
 
-// Difficulty totals: unique problems across all three prep lists (deduped by slug)
-const uniqueBySlug = new Map<string, ListProblem>();
-for (const p of [...blind75Data, ...neetcode150Data, ...grind75Data] as ListProblem[]) {
-  uniqueBySlug.set(p.slug, p);
-}
-const difficultyTotals = { Easy: 0, Medium: 0, Hard: 0 };
-for (const p of uniqueBySlug.values()) {
-  if (p.difficulty in difficultyTotals) {
-    difficultyTotals[p.difficulty as keyof typeof difficultyTotals]++;
-  }
-}
-
-const easy = { solved: 58, total: difficultyTotals.Easy };
-const medium = { solved: 47, total: difficultyTotals.Medium };
-const hard = { solved: 5, total: difficultyTotals.Hard };
+// Difficulty totals are demo-specific stand-ins for the site-wide problem
+// universe (not derived from the lists above, which would under-count).
+const easy = { solved: 58, total: 86 };
+const medium = { solved: 47, total: 183 };
+const hard = { solved: 5, total: 81 };
+assertSolvedNotExceedTotal('demo', [easy, medium, hard]);
 ---
 
 <div class="relative rounded-xl overflow-hidden border border-surface-600 bg-surface-800/40">

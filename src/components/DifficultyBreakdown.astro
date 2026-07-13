@@ -12,6 +12,13 @@ function calcPct(solved: number, total: number): number {
   return Math.min(100, Math.round((solved / total) * 100));
 }
 
+// Sanity check: refuse to render if any band has solved > total. The clamp
+// in calcPct() would otherwise hide the invalid ratio by silently capping
+// the displayed percentage at 100%.
+if ([easy, medium, hard].some((b) => b.solved > b.total)) {
+  throw new Error(`[DifficultyBreakdown] Invalid breakdown data: solved exceeds total in one or more bands.`);
+}
+
 const easyPct = calcPct(easy.solved, easy.total);
 const medPct = calcPct(medium.solved, medium.total);
 const hardPct = calcPct(hard.solved, hard.total);
