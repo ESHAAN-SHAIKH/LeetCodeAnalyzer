@@ -1,0 +1,37 @@
+---
+// Brand mark — same composition as public/favicon.svg:
+// dark ink rounded square + 3 ascending gold bars + soft-gold baseline.
+// Bars use currentColor so the wrapper's CSS color tints them. The background
+// and baseline are fixed to the brand palette so the mark looks consistent
+// wherever it is rendered (header, footer, social preview).
+interface Props {
+  size?: number;
+  class?: string;
+  ariaLabel?: string;
+}
+const { size = 32, class: extraClass = '', ariaLabel } = Astro.props;
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+  width={size}
+  height={size}
+  role={ariaLabel ? 'img' : 'presentation'}
+  aria-label={ariaLabel}
+  aria-hidden={ariaLabel ? undefined : 'true'}
+  class={extraClass}
+>
+  {ariaLabel && <title>{ariaLabel}</title>}
+  <!-- Dark ink rounded square background -->
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#0B0E0C"/>
+  <!-- Subtle inner highlight ring -->
+  <rect x="0.5" y="0.5" width="63" height="63" rx="13.5" fill="none" stroke="#1D231A" stroke-width="1"/>
+  <!-- Ascending bars — use currentColor so CSS `.text-signal` tints them -->
+  <g style="color:#D9A441">
+    <rect x="16" y="38" width="7" height="9" rx="1.5" fill="currentColor"/>
+    <rect x="28.5" y="28" width="7" height="19" rx="1.5" fill="currentColor"/>
+    <rect x="41" y="16" width="7" height="31" rx="1.5" fill="currentColor"/>
+  </g>
+  <!-- Soft gold baseline (fixed for brand consistency) -->
+  <rect x="14" y="48" width="36" height="3" rx="1.5" fill="#E8C27A"/>
+</svg>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import BrandLogo from '../components/BrandLogo.astro';
 
 interface Props {
   title: string;
@@ -132,11 +133,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         <div class="flex h-16 items-center justify-between">
           <!-- Logo -->
           <a href="/" class="flex items-center gap-2.5 group font-display" aria-label="LeetCodeAnalyzer home">
-            <div class="flex h-8 w-8 items-center justify-center rounded bg-signal/15 border border-signal/30 text-signal transition-colors group-hover:border-signal/50">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <BrandLogo size={32} ariaLabel="LeetCodeAnalyzer" />
             <span class="text-base font-semibold tracking-tight" style="color: var(--color-text-primary);">
               LeetCode<span class="text-signal">Analyzer</span>
             </span>
@@ -224,7 +221,8 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           <!-- Brand -->
           <div class="md:col-span-2">
             <a href="/" class="flex items-center gap-2 mb-3 font-display" aria-label="LeetCodeAnalyzer home">
-              <span class="text-sm font-semibold">LeetCode<span class="text-signal">Analyzer</span></span>
+              <BrandLogo size={28} ariaLabel="LeetCodeAnalyzer" />
+              <span class="text-sm font-semibold"><span style="color: var(--color-text-primary);">LeetCode</span><span class="text-signal">Analyzer</span></span>
             </a>
             <p class="text-xs leading-relaxed max-w-xs" style="color: var(--color-text-muted);">
               Free LeetCode progress tracker. Auto-computes your Blind 75, NeetCode 150, and Grind 75 coverage from your actual solve history. Your code never leaves your browser.
