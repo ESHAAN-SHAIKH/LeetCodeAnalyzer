@@ -19,9 +19,17 @@ let profileData: any = null;
 let errorState: string | null = null;
 
 try {
+  // Call the API handler directly. Cloudflare Workers does not reliably
+  // route an SSR fetch() back to the same Worker via http when deployed
+  // on the *.workers.dev subdomain, so importing the handler avoids
+  // a 404 in SSR and keeps the SSR build self-contained.
+  const { GET: profileHandler } = await import('../../pages/api/profile');
+  const inboundHeaders = (Astro.locals as any)?.request?.headers;
   const apiUrl = new URL(`/api/profile?username=${encodeURIComponent(username ?? '')}`, Astro.url);
-  const res = await fetch(apiUrl.toString());
-
+  const apiRequest = new Request(apiUrl.toString(), {
+    headers: inboundHeaders instanceof Headers ? inboundHeaders : undefined,
+  });
+  const res: Response = await profileHandler({ request: apiRequest } as any);
   if (res.status === 404) {
     errorState = 'user_not_found';
   } else if (res.status === 400) {
