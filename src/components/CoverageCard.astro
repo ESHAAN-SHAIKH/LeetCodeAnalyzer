@@ -135,9 +135,10 @@ const ringId = `ring-${listName}`;
           </a>
         ))}
         {remainingProblems.length > 10 && (
-          <div id={`show-more-${listName}`}>
+          <>
             <button
               type="button"
+              id={`show-more-${listName}`}
               class="w-full text-center text-xs py-2 rounded-lg transition-colors hover:bg-signal/5 font-medium cursor-pointer"
               style="color: var(--color-signal);"
               data-list={listName}
@@ -162,7 +163,7 @@ const ringId = `ring-${listName}`;
                 </a>
               ))}
             </div>
-          </div>
+          </>
         )}
       </div>
     </details>
